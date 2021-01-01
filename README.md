@@ -1,3 +1,2 @@
 # RayTracer
-
-A description of this package.
+Implementing a simple ray tracer in Swift.
