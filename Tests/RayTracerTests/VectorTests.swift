@@ -34,7 +34,6 @@ final class VectorTests: XCTestCase {
         let u = Vector(4.0, 2.0, 4.0).normalized
         let expected = Vector(2.0/3.0, 1.0/3.0, 2.0/3.0)
         AssertEqualVector(u, expected)
-
     }
 
     func testAddition() {
