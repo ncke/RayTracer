@@ -17,7 +17,7 @@ extension Sphere: Object {
         let c = (g • g) - (radius * radius)
         let d = (b * b) - 4.0 * a * c
 
-        guard d > 0.0 else {
+        guard d >= 0.0 else {
             return nil
         }
 

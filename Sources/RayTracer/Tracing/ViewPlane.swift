@@ -46,8 +46,8 @@ extension ViewPlane {
 extension ViewPlane {
 
     func eyeRay(
-        forScreenX x: Double,
-        screenY y: Double
+        forScreenX x: Int,
+        screenY y: Int
     ) -> Ray {
         let destination = point(forScreenX: x, screenY: y)
 
@@ -55,11 +55,11 @@ extension ViewPlane {
     }
 
     private func point(
-        forScreenX x: Double,
-        screenY y: Double
+        forScreenX x: Int,
+        screenY y: Int
     ) -> Point {
-        let xPrime = 2.0 * (x / imageWidth) - 1.0
-        let yPrime = 2.0 * (y / imageHeight) - 1.0
+        let xPrime = 2.0 * (Double(x) / imageWidth) - 1.0
+        let yPrime = 2.0 * (Double(y) / imageHeight) - 1.0
 
         return midpoint + xPrime * horizontal + yPrime * vertical
     }

@@ -3,15 +3,15 @@ import XCTest
 
 final class RayTracerTests: XCTestCase {
 
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(RayTracer().text, "Hello, World!")
+    func testRayTracer() {
+        let tracer = RayTracer()
+        let image = tracer.trace()
+
+        XCTAssertNotNil(image)
     }
 
     static var allTests = [
-        ("testExample", testExample),
+        ("testRayTracer", testRayTracer),
     ]
     
 }
