@@ -10,8 +10,8 @@ struct ViewPlane {
     let midpoint: Point
     let horizontal: Vector
     let vertical: Vector
-    let screenWidth: Double
-    let screenHeight: Double
+    let imageWidth: Double
+    let imageHeight: Double
 }
 
 // MARK: - Initialiser
@@ -25,8 +25,8 @@ extension ViewPlane {
         up: Vector,
         theta: Double,
         phi: Double,
-        screenWidth: Double,
-        screenHeight: Double
+        imageWidth: Double,
+        imageHeight: Double
     ) {
         let x = gaze ✕ up
         let y = x ✕ gaze
@@ -35,8 +35,8 @@ extension ViewPlane {
         self.horizontal = distance * tan(theta) * x
         self.vertical = distance * tan(phi) * y
         self.eye = eye
-        self.screenWidth = screenWidth
-        self.screenHeight = screenHeight
+        self.imageWidth = imageWidth
+        self.imageHeight = imageHeight
     }
 
 }
@@ -58,8 +58,8 @@ extension ViewPlane {
         forScreenX x: Double,
         screenY y: Double
     ) -> Point {
-        let xPrime = 2.0 * (x / screenWidth) - 1.0
-        let yPrime = 2.0 * (y / screenHeight) - 1.0
+        let xPrime = 2.0 * (x / imageWidth) - 1.0
+        let yPrime = 2.0 * (y / imageHeight) - 1.0
 
         return midpoint + xPrime * horizontal + yPrime * vertical
     }

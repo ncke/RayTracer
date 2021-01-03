@@ -15,6 +15,8 @@ struct Point {
 
 extension Point {
 
+    static let zero = Point(0.0, 0.0, 0.0)
+
     var asVector: Vector { Vector(x, y, z) }
 
     init(_ x: Double, _ y: Double, _ z: Double) {

@@ -4,16 +4,7 @@
 import XCTest
 @testable import RayTracer
 
-final class VectorTests: XCTestCase {
-
-    /// Tolerance (+/-) for floating point tests.
-    static let epsilon = 1E-9
-
-    func AssertEqualVector(_ u: Vector, _ v: Vector) {
-        XCTAssertEqual(u.x, v.x, accuracy: VectorTests.epsilon)
-        XCTAssertEqual(u.y, v.y, accuracy: VectorTests.epsilon)
-        XCTAssertEqual(u.z, v.z, accuracy: VectorTests.epsilon)
-    }
+final class VectorTests: RayTracerTestCase {
 
     func testZero() {
         let expected = Vector(0.0, 0.0, 0.0)
