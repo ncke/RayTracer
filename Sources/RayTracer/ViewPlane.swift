@@ -23,8 +23,8 @@ extension ViewPlane {
         distance: Double,
         gaze: Vector,
         up: Vector,
-        theta: Double,
-        phi: Double,
+        theta: Radians,
+        phi: Radians,
         imageWidth: Double,
         imageHeight: Double
     ) {
