@@ -44,7 +44,6 @@ extension TraceImage {
         for x in 0..<width {
             for y in 0..<height {
 
-                index += 1
                 let (r, g, b) = dataSource.rbg(x, y)
                 let pixel: Pixel = (
                     UInt8(r * 255.0),
@@ -54,6 +53,7 @@ extension TraceImage {
                 )
 
                 buffer[index] = pixel
+                index += 1
             }
         }
 
