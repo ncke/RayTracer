@@ -25,6 +25,14 @@ extension Point {
         self.z = z
     }
 
+    func distance(to point: Point) -> Double {
+        let dx = point.x - self.x
+        let dy = point.y - self.y
+        let dz = point.z - self.z
+
+        return sqrt((dx * dx) + (dy * dy) + (dz * dz))
+    }
+
 }
 
 func + (lhs: Point, rhs: Point) -> Point {

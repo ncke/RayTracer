@@ -28,4 +28,8 @@ extension Sphere: Object {
         return ray.origin + t * ray.direction
     }
 
+    func normal(point: Point) -> Vector {
+        return -(center - point).asVector.normalized
+    }
+
 }

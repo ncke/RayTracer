@@ -62,3 +62,7 @@ infix operator •
 func • (lhs: Vector, rhs: Vector) -> Double {
     lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z
 }
+
+prefix func - (operand: Vector) -> Vector {
+    Vector(-operand.x, -operand.y, -operand.z)
+}

@@ -5,4 +5,5 @@ import Foundation
 
 protocol Object {
     func intersection(ray: Ray) -> Point?
+    func normal(point: Point) -> Vector
 }

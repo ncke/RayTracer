@@ -16,23 +16,29 @@ extension RayTracer {
             distance: 10.0,
             gaze: Vector(0.0, 0.0, 1.0),
             up: Vector(0.0, 1.0, 0.0),
-            theta: 20.0,
-            phi: 20.0,
+            theta: 45.0,
+            phi: 45.0,
             imageWidth: 240.0,
             imageHeight: 240.0
         )
 
         let sphere1 = Sphere(
-            center: Point(0.0, 0.0, 20.0),
+            center: Point(0.0, 0.0, 30.0),
             radius: 12.0
         )
 
         let sphere2 = Sphere(
-            center: Point(20.0, 20.0, 40.0),
-            radius: 10.0
+            center: Point(-2.0, -2.0, 12.0),
+            radius: 2.0
         )
 
-        self.scene = Scene(objects: [ sphere1, sphere2 ])
+        let light = LightSource(
+            center: Point(-40.0, 50.0, 0.0),
+            radius: 10.0,
+            intensity: 1.0
+        )
+
+        self.scene = Scene(objects: [sphere1, sphere2], lights: [light])
 
         self.imageWidth = 240
         self.imageHeight = 240
@@ -53,13 +59,18 @@ extension RayTracer: TraceImageDataSource {
 
     func rbg(_ x: Int, _ y: Int) -> ImageRGB {
         let eyeRay = viewPlane.eyeRay(forScreenX: x, screenY: y)
-        for object in scene.objects {
-            if object.intersection(ray: eyeRay) != nil {
-                return (1.0, 0.0, 0.0)
-            }
+
+        guard let hit = scene.objectHit(by: eyeRay) else {
+            return (0.8, 0.8, 0.8)
         }
 
-        return (0.8, 0.8, 0.8)
+        guard let lights = scene.lightsVisible(from: hit.point) else {
+            return (0.0, 0.0, 0.0)
+        }
+
+        
+
+        return (1.0, 0.0, 0.0)
     }
 
 }
