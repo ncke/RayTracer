@@ -8,5 +8,3 @@ struct LightSource {
     let radius: Double
     let intensity: Double
 }
-
-extension LightSource: SphericalGeometry {}

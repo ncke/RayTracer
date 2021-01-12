@@ -29,17 +29,12 @@ extension Scene {
         return nearest
     }
 
-    func lightsVisible(
-        from point: Point,
-        on object: Object
-    ) -> [LightSource]? {
+    func lightsVisible(from point: Point) -> [LightSource]? {
         var visible = [LightSource]()
 
         for light in lights {
             let ray = Ray(origin: point, towards: light.center)
-            let hitObject = objectHit(by: ray)?.object
-
-            if let hitObject = hitObject, hitObject != object {
+            guard objectHit(by: ray) == nil else {
                 continue
             }
 

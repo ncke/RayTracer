@@ -43,6 +43,10 @@ func - (lhs: Point, rhs: Point) -> Point {
     Point(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z)
 }
 
+prefix func - (operand: Point) -> Point {
+    Point(-operand.x, -operand.y, -operand.z)
+}
+
 func + (lhs: Point, rhs: Vector) -> Point {
     Point(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z)
 }

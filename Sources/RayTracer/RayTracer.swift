@@ -28,12 +28,12 @@ extension RayTracer {
         )
 
         let sphere2 = Sphere(
-            center: Point(-2.0, -2.0, 12.0),
+            center: Point(-5.0, -5.0, 12.0),
             radius: 2.0
         )
 
         let light = LightSource(
-            center: Point(-40.0, 50.0, 0.0),
+            center: Point(-10.0, -10.0, -50.0),
             radius: 10.0,
             intensity: 1.0
         )
@@ -57,7 +57,7 @@ extension RayTracer: TraceImageDataSource {
 
     func imageSize() -> ImageSize { (imageWidth, imageHeight) }
 
-    func rbg(_ x: Int, _ y: Int) -> ImageRGB {
+    func rgb(_ x: Int, _ y: Int) -> ImageRGB {
         let eyeRay = viewPlane.eyeRay(forScreenX: x, screenY: y)
 
         guard let hit = scene.objectHit(by: eyeRay) else {
@@ -68,7 +68,21 @@ extension RayTracer: TraceImageDataSource {
             return (0.0, 0.0, 0.0)
         }
 
-        
+        for light in lights {
+            let n = hit.object.normal(point: hit.point).normalized
+            let l = Vector(from: hit.point, towards: light.center).normalized
+            let e = Vector(from: hit.point, towards: eyeRay.origin).normalized
+
+            let d = n • l
+            let r = 2 * n * d - l
+            let k = 8.0
+            let sr = light.intensity * pow(e • r, k)
+            let c = (sr + 1.0) / 2.0
+
+            print(sr, c)
+
+            return (c, 0.0, 0.0)
+        }
 
         return (1.0, 0.0, 0.0)
     }

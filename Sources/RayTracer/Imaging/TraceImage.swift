@@ -8,7 +8,7 @@ typealias ImageRGB = (Double, Double, Double)
 
 protocol TraceImageDataSource {
     func imageSize() -> ImageSize
-    func rbg(_ x: Int, _ y: Int) -> ImageRGB
+    func rgb(_ x: Int, _ y: Int) -> ImageRGB
 }
 
 struct TraceImage {
@@ -44,7 +44,7 @@ extension TraceImage {
         for x in 0..<width {
             for y in 0..<height {
 
-                let (r, g, b) = dataSource.rbg(x, y)
+                let (r, g, b) = dataSource.rgb(x, y)
                 let pixel: Pixel = (
                     UInt8(r * 255.0),
                     UInt8(g * 255.0),

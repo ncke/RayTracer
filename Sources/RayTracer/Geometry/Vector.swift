@@ -18,6 +18,14 @@ extension Vector {
         self.z = z
     }
 
+    init(from origin: Point, towards destination: Point) {
+        let vector = (destination - origin).asVector
+
+        self.x = vector.x
+        self.y = vector.y
+        self.z = vector.z
+    }
+
     static var zero: Vector { Vector(0.0, 0.0, 0.0) }
 
     static var unit: Vector { Vector(1.0, 1.0, 1.0) }
