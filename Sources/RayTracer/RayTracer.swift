@@ -1,90 +1,99 @@
-import CoreGraphics
+//
+//  RayTracer.swift
+//  Created by Nick on 19/04/2022.
+//
 
-struct RayTracer {
-    private let viewPlane: ViewPlane
-    private let scene: Scene
-    private let imageWidth: Int
-    private let imageHeight: Int
-}
+import Foundation
 
-extension RayTracer {
+public struct RayTracer {
 
-    init() {
+    public static func trace(
+        camera: Camera,
+        world: [Shape],
+        antialiasing: Antialiasing
+    ) -> String {
+        var p3str: String = "P3\n\(camera.pixels.0) \(camera.pixels.1)\n255\n"
 
-        self.viewPlane = ViewPlane(
-            eye: Point.zero,
-            distance: 10.0,
-            gaze: Vector(0.0, 0.0, 1.0),
-            up: Vector(0.0, 1.0, 0.0),
-            theta: 45.0,
-            phi: 45.0,
-            imageWidth: 240.0,
-            imageHeight: 240.0
-        )
-
-        let sphere1 = Sphere(
-            center: Point(0.0, 0.0, 30.0),
-            radius: 12.0
-        )
-
-        let sphere2 = Sphere(
-            center: Point(-5.0, -5.0, 12.0),
-            radius: 2.0
-        )
-
-        let light = LightSource(
-            center: Point(-10.0, -10.0, -50.0),
-            radius: 10.0,
-            intensity: 1.0
-        )
-
-        self.scene = Scene(objects: [sphere1, sphere2], lights: [light])
-
-        self.imageWidth = 240
-        self.imageHeight = 240
-    }
-
-    func trace() -> CGImage? {
-        let traceImage = TraceImage(dataSource: self)
-        return traceImage.trace()
-    }
-
-}
-
-// MARK: - Trace Image Data Source
-
-extension RayTracer: TraceImageDataSource {
-
-    func imageSize() -> ImageSize { (imageWidth, imageHeight) }
-
-    func rgb(_ x: Int, _ y: Int) -> ImageRGB {
-        let eyeRay = viewPlane.eyeRay(forScreenX: x, screenY: y)
-
-        guard let hit = scene.objectHit(by: eyeRay) else {
-            return (0.8, 0.8, 0.8)
+        let intersectables = world.compactMap {
+            shape in shape as? Intersectable
         }
 
-        guard let lights = scene.lightsVisible(from: hit.point) else {
-            return (0.0, 0.0, 0.0)
+        let antialiased = antialiasing.isOn
+        let antialiasCount = antialiasing.antialiasCount ?? 1
+
+        for pixel in camera.allPixels {
+            var normals = [Vector3]()
+
+            for _ in 0..<antialiasCount {
+                let ray = camera.ray(through: pixel, antialiased: antialiased)
+
+                guard let intersection = nearestIntersection(
+                    ray: ray,
+                    shapes: intersectables
+                ) else {
+                    continue
+                }
+
+                let target = intersection.hitPoint + intersection.normal + Sphere.unit.randomInteriorPoint
+
+                let ray2 = Ray(origin: intersection.hitPoint, direction: target - intersection.hitPoint)
+
+                guard let nnn = nearestIntersection(ray: ray2, shapes: intersectables) else {
+                    continue
+                }
+
+
+                normals.append(nnn.normal)
+            }
+
+            let pixelColor = hitColor(normals: normals)
+            p3str += "\(pixelColor.red) \(pixelColor.green) \(pixelColor.blue)\n"
         }
 
-        for light in lights {
-            let n = hit.object.normal(point: hit.point).normalized
-            let l = Vector(from: hit.point, towards: light.center).normalized
-            let e = Vector(from: hit.point, towards: eyeRay.origin).normalized
-
-            let d = n • l
-            let r = 2 * n * d - l
-            let k = 8.0
-            let sr = light.intensity * pow(e • r, k)
-            let c = (sr + 1.0) / 2.0
-
-            print(sr, c)
-
-            return (c, 0.0, 0.0)
-        }
-
-        return (1.0, 0.0, 0.0)
+        return p3str
     }
 
+    static func nearestIntersection(
+        ray: Ray,
+        shapes: [Intersectable]
+    ) -> IntersectionRecord? {
+        var nearest: IntersectionRecord?
+
+        for shape in shapes {
+            let intersection = shape.intersection(
+                ray: ray,
+                tRange: 0.0..<Double.infinity
+            )
+
+            guard let intersected = intersection else {
+                continue
+            }
+
+            guard let nearestSoFar = nearest else {
+                nearest = intersected
+                continue
+            }
+
+            if intersected.temp < nearestSoFar.temp {
+                nearest = intersected
+            }
+        }
+
+        return nearest
+    }
+
+    static func hitColor(normals: [Vector3]) -> ColorVector {
+        guard let average = normals.average else {
+            return ColorVector(0, 0, 255)
+        }
+
+        let rgb = 0.5 * Vector3(
+            average.x + 1.0,
+            average.y + 1.0,
+            average.z + 1.0
+        )
+
+        return ColorVector(rgb.x, rgb.y, rgb.z)
+    }
+    
 }
