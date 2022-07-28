@@ -5,7 +5,19 @@
 
 import Foundation
 
+// MARK: - Shape
+
 public protocol Shape {}
+
+// MARK: - Intersectable
+
+protocol Intersectable {
+
+    func intersection(ray: Ray, tRange: Range<Double>) -> IntersectionRecord?
+
+}
+
+// MARK: - Intersection Record
 
 struct IntersectionRecord {
     let temp: Double
@@ -13,8 +25,3 @@ struct IntersectionRecord {
     let normal: Vector3
 }
 
-protocol Intersectable {
-
-    func intersection(ray: Ray, tRange: Range<Double>) -> IntersectionRecord?
-
-}

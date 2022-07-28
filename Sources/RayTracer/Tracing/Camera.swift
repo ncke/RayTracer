@@ -38,10 +38,11 @@ extension Camera {
 
     struct PixelSequence: Sequence, IteratorProtocol {
         private let pixels: (Int, Int)
-        private var current = (-1, 0)
+        private var current: (Int, Int)
 
         init(pixels: (Int, Int)) {
             self.pixels = pixels
+            self.current = (-1, pixels.1 - 1)
         }
 
         mutating func next() -> (Int, Int)? {
@@ -51,8 +52,8 @@ extension Camera {
             if x >= pixels.0 {
                 x = 0
 
-                y += 1
-                if y >= pixels.1 {
+                y -= 1
+                if y < 0 {
                     return nil
                 }
             }

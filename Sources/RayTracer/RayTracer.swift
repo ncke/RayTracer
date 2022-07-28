@@ -10,6 +10,7 @@ public struct RayTracer {
     public static func trace(
         camera: Camera,
         world: [Shape],
+        depthRange: Range<Double>,
         antialiasing: Antialiasing
     ) -> String {
         var p3str: String = "P3\n\(camera.pixels.0) \(camera.pixels.1)\n255\n"
@@ -22,47 +23,74 @@ public struct RayTracer {
         let antialiasCount = antialiasing.antialiasCount ?? 1
 
         for pixel in camera.allPixels {
-            var normals = [Vector3]()
+            var colors = [Vector3]()
 
             for _ in 0..<antialiasCount {
                 let ray = camera.ray(through: pixel, antialiased: antialiased)
-
-                guard let intersection = nearestIntersection(
+                let color = colorVector(
                     ray: ray,
-                    shapes: intersectables
-                ) else {
-                    continue
-                }
+                    shapes: intersectables,
+                    depthRange: depthRange
+                )
 
-                let target = intersection.hitPoint + intersection.normal + Sphere.unit.randomInteriorPoint
-
-                let ray2 = Ray(origin: intersection.hitPoint, direction: target - intersection.hitPoint)
-
-                guard let nnn = nearestIntersection(ray: ray2, shapes: intersectables) else {
-                    continue
-                }
-
-
-                normals.append(nnn.normal)
+                colors.append(color)
             }
 
-            let pixelColor = hitColor(normals: normals)
-            p3str += "\(pixelColor.red) \(pixelColor.green) \(pixelColor.blue)\n"
+            guard let average = colors.average else {
+                fatalError()
+            }
+
+            let rgb = RGBColor(average, gamma: .gamma2)
+            p3str += "\(rgb.red) \(rgb.green) \(rgb.blue)\n"
         }
 
         return p3str
     }
 
+    static func colorVector(
+        ray: Ray,
+        shapes: [Intersectable],
+        depthRange: Range<Double>
+    ) -> Vector3 {
+        guard
+            let intersection = nearestIntersection(
+                ray: ray,
+                shapes: shapes,
+                depthRange: depthRange
+            )
+        else {
+            let unitDirection = ray.direction.normalised
+            let t = 0.5 * (unitDirection.y + 1.0)
+            return (1.0 - t) * Vector3.unit + t * Vector3(0.5, 0.7, 1.0)
+        }
+
+        let target = intersection.hitPoint
+            + intersection.normal
+            + Sphere.unit.randomInteriorPoint
+
+        let outgoingRay = Ray(
+            origin: intersection.hitPoint,
+            direction: target - intersection.hitPoint
+        )
+
+        return 0.5 * colorVector(
+            ray: outgoingRay,
+            shapes: shapes,
+            depthRange: depthRange
+        )
+    }
+
     static func nearestIntersection(
         ray: Ray,
-        shapes: [Intersectable]
+        shapes: [Intersectable],
+        depthRange: Range<Double>
     ) -> IntersectionRecord? {
         var nearest: IntersectionRecord?
 
         for shape in shapes {
             let intersection = shape.intersection(
                 ray: ray,
-                tRange: 0.0..<Double.infinity
+                tRange: depthRange
             )
 
             guard let intersected = intersection else {
@@ -82,18 +110,4 @@ public struct RayTracer {
         return nearest
     }
 
-    static func hitColor(normals: [Vector3]) -> ColorVector {
-        guard let average = normals.average else {
-            return ColorVector(0, 0, 255)
-        }
-
-        let rgb = 0.5 * Vector3(
-            average.x + 1.0,
-            average.y + 1.0,
-            average.z + 1.0
-        )
-
-        return ColorVector(rgb.x, rgb.y, rgb.z)
-    }
-    
 }

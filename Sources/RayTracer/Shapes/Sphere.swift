@@ -85,11 +85,13 @@ extension Sphere {
                 Double.random(in: 0.0..<1.0)
             )
 
-            if unitRandom ⋅ unitRandom >= 1.0 {
+            let unitPoint = 2.0 * unitRandom - Vector3(1.0, 1.0, 1.0)
+
+            if unitPoint ⋅ unitPoint >= 1.0 {
                 continue
             }
 
-            return radius * (2.0 * unitRandom - Vector3(1.0, 1.0, 1.0))
+            return radius * unitPoint
         }
     }
 

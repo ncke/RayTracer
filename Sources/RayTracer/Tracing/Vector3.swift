@@ -23,11 +23,13 @@ struct Vector3 {
     }
 }
 
-// MARK: - Zero
+// MARK: - Zero and Unit
 
 extension Vector3 {
 
     static let zero = Vector3(0.0, 0.0, 0.0)
+
+    static let unit = Vector3(1.0, 1.0, 1.0)
 
 }
 
