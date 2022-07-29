@@ -5,6 +5,8 @@
 
 import Foundation
 
+// MARK: - Ray Tracer
+
 public struct RayTracer {
 
     public static func trace(
@@ -50,7 +52,8 @@ public struct RayTracer {
     static func colorVector(
         ray: Ray,
         shapes: [Intersectable],
-        depthRange: Range<Double>
+        depthRange: Range<Double>,
+        recursionCount: Int = 0
     ) -> Vector3 {
         guard
             let intersection = nearestIntersection(
@@ -76,7 +79,8 @@ public struct RayTracer {
         return 0.5 * colorVector(
             ray: outgoingRay,
             shapes: shapes,
-            depthRange: depthRange
+            depthRange: depthRange,
+            recursionCount: recursionCount + 1
         )
     }
 

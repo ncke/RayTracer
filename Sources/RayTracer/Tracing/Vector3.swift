@@ -21,6 +21,10 @@ struct Vector3 {
     init(_ tuple: (Double, Double, Double)) {
         self.init(tuple.0, tuple.1, tuple.2)
     }
+
+    init(uniform: Double) {
+        self.init(uniform, uniform, uniform)
+    }
 }
 
 // MARK: - Zero and Unit
@@ -165,6 +169,16 @@ extension Collection where Element == Vector3 {
             total.y / count,
             total.z / count
         )
+    }
+
+}
+
+// MARK: - Reflection
+
+extension Vector3 {
+
+    func reflected(normal: Vector3) -> Vector3 {
+        self - 2.0 * (self ⋅ normal) * normal
     }
 
 }
