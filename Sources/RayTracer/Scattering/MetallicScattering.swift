@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - Metallic Scattering
+
 struct MetallicScattering {
 
     static func scatter(
@@ -20,8 +22,8 @@ struct MetallicScattering {
         )
 
         if fuzziness > Double.zero {
-            let peturbation = Sphere.randomInteriorPoint(radius: 1.0)
-            reflected += fuzziness * peturbation
+            let peturb = Sphere.randomInteriorPoint(radius: Sphere.unitRadius)
+            reflected += fuzziness * peturb
         }
 
         let scattered = Ray(

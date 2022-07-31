@@ -13,7 +13,7 @@ final class RayTracerTests: XCTestCase {
         let sphere1 = Sphere(0.0, 0.0, -1.0, radius: 0.5, material: .lambertian(albedo: Albedo(0.8, 0.3, 0.3)))
         let sphere2 = Sphere(0.0, -100.5, -1.0, radius: 100.0, material: .lambertian(albedo: Albedo(0.8, 0.8, 0.0)))
         let sphere3 = Sphere(1.0, 0.0, -1.0, radius: 0.5, material: .metal(albedo: Albedo(0.8, 0.6, 0.2), fuzziness: 1.0))
-        let sphere4 = Sphere(-1.0, 0.0, -1.0, radius: 0.5, material: .metal(albedo: Albedo(uniform: 0.8), fuzziness: 0.3))
+        let sphere4 = Sphere(-1.0, 0.0, -1.0, radius: 0.5, material: .dielectric(refractiveIndex: RefractiveIndex.glass))
 
 
         let world = World()

@@ -182,3 +182,60 @@ extension Vector3 {
     }
 
 }
+
+// MARK: - Refraction
+
+extension Vector3 {
+
+    func refracted(
+        normal: Vector3,
+        refractiveIndex: RefractiveIndex
+    ) -> Vector3 {
+
+        func direction(
+            normal: Vector3,
+            refractiveIndex: RefractiveIndex
+        ) -> (Vector3, Double, Double) {
+            let dotted = self ⋅ normal
+
+            if dotted > Double.zero {
+                let cosine = (refractiveIndex.index * dotted) / length
+                return (-normal, refractiveIndex.index, cosine)
+
+            } else {
+                let cosine = -dotted / length
+                return (normal, refractiveIndex.invertedIndex, cosine)
+            }
+        }
+
+        let (outwardNormal, outwardIndex, cosine) = direction(
+            normal: normal,
+            refractiveIndex: refractiveIndex
+        )
+
+        func shouldSchlickReflect() -> Bool {
+            let r0 = (1.0 - outwardIndex) / (1.0 + outwardIndex)
+            let r0_squared = r0 * r0
+            let schlick = r0_squared + (1.0 - r0_squared) * pow(1.0 - cosine, 5)
+
+            return Double.random(in: 0..<1.0) > schlick
+        }
+
+        let dt = self.normalised ⋅ outwardNormal
+        let discriminant = 1.0 - outwardIndex * outwardIndex * (1.0 - dt * dt)
+
+        let shouldRefract = discriminant > Double.zero
+            && !shouldSchlickReflect()
+
+        guard shouldRefract else {
+            return reflected(normal: normal)
+        }
+
+        let refraction =
+            outwardIndex * (self - outwardNormal * dt)
+                - outwardNormal * sqrt(discriminant)
+
+        return refraction
+    }
+
+}

@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - Lambertian Scattering
+
 struct LambertianScattering {
 
     static func scatter(
@@ -17,7 +19,7 @@ struct LambertianScattering {
 
         let target = intersection.hitPoint
             + intersection.normal
-            + Sphere.randomInteriorPoint(radius: 1.0)
+            + Sphere.randomInteriorPoint(radius: Sphere.unitRadius)
 
         let scattered = Ray(
             origin: intersection.hitPoint,

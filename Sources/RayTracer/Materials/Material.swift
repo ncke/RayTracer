@@ -12,6 +12,7 @@ import Foundation
 public enum Material {
     case lambertian(albedo: Albedo)
     case metal(albedo: Albedo, fuzziness: Double)
+    case dielectric(refractiveIndex: RefractiveIndex)
 }
 
 // MARK: - Scattering
@@ -36,6 +37,13 @@ extension Material {
             return MetallicScattering.scatter(
                 albedo: albedo,
                 fuzziness: fuzziness,
+                incomingRay: incomingRay,
+                intersection: intersection
+            )
+
+        case .dielectric(let refractiveIndex):
+            return DielectricScattering.scatter(
+                refractiveIndex: refractiveIndex,
                 incomingRay: incomingRay,
                 intersection: intersection
             )

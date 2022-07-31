@@ -76,6 +76,14 @@ extension Sphere: Intersectable {
 
 }
 
+// MARK: - Unit Radius
+
+extension Sphere {
+
+    static let unitRadius = 1.0
+
+}
+
 // MARK: - Random Interior Point
 
 extension Sphere {
@@ -90,7 +98,7 @@ extension Sphere {
 
             let unitPoint = 2.0 * unitRandom - Vector3(1.0, 1.0, 1.0)
 
-            if unitPoint ⋅ unitPoint >= 1.0 {
+            if unitPoint ⋅ unitPoint >= Sphere.unitRadius {
                 continue
             }
 
