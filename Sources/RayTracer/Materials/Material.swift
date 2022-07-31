@@ -10,8 +10,8 @@ import Foundation
 // MARK: - Material
 
 public enum Material {
-    case diffuse(albedo: (Double, Double, Double))
-    case metal(albedo: (Double, Double, Double))
+    case lambertian(albedo: Albedo)
+    case metal(albedo: Albedo, fuzziness: Double)
 }
 
 // MARK: - Scattering
@@ -20,39 +20,25 @@ extension Material {
 
     func scatter(
         incomingRay: Ray,
-        intersection: IntersectionRecord
-    ) -> (Bool, Vector3?, Ray?) {
+        intersection: Intersection
+    ) -> (Vector3, Ray)? {
 
         switch self {
 
-        case .diffuse(let albedo):
-            let target = intersection.hitPoint
-                + intersection.normal
-                + Sphere.unit.randomInteriorPoint
-
-            let scatter = Ray(
-                origin: intersection.hitPoint,
-                direction: target - intersection.hitPoint
+        case .lambertian(let albedo):
+            return LambertianScattering.scatter(
+                albedo: albedo,
+                incomingRay: incomingRay,
+                intersection: intersection
             )
 
-            let attenuation = Vector3(albedo)
-
-            return (true, attenuation, scatter)
-
-
-        case .metal(let albedo):
-            let reflected = incomingRay.direction.normalised.reflected(
-                normal: intersection.normal
+        case .metal(let albedo, let fuzziness):
+            return MetallicScattering.scatter(
+                albedo: albedo,
+                fuzziness: fuzziness,
+                incomingRay: incomingRay,
+                intersection: intersection
             )
-
-            let scatter = Ray(intersection.hitPoint, reflected)
-
-            if scatter.direction ⋅ intersection.normal > 0.0 {
-                let attenuation = Vector3(albedo)
-                return (true, attenuation, scatter)
-            }
-
-            return (false, nil, nil)
         }
 
     }

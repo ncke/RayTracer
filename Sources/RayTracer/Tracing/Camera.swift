@@ -73,11 +73,11 @@ extension Camera {
 
 extension Camera {
 
-    func ray(through pixel: (Int, Int), antialiased: Bool) -> Ray {
+    func ray(through pixel: (Int, Int), applyAntialias: Bool) -> Ray {
         var px = Double(pixel.0)
         var py = Double(pixel.1)
 
-        if antialiased {
+        if applyAntialias {
             px += Double.random(in: 0.0..<1.0)
             py += Double.random(in: 0.0..<1.0)
         }

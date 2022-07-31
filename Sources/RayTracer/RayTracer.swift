@@ -11,28 +11,21 @@ public struct RayTracer {
 
     public static func trace(
         camera: Camera,
-        world: [Shape],
-        depthRange: Range<Double>,
-        antialiasing: Antialiasing
+        world: World,
+        configuration: TraceConfiguration
     ) -> String {
         var p3str: String = "P3\n\(camera.pixels.0) \(camera.pixels.1)\n255\n"
-
-        let intersectables = world.compactMap {
-            shape in shape as? Intersectable
-        }
-
-        let antialiased = antialiasing.isOn
-        let antialiasCount = antialiasing.antialiasCount ?? 1
 
         for pixel in camera.allPixels {
             var colors = [Vector3]()
 
-            for _ in 0..<antialiasCount {
-                let ray = camera.ray(through: pixel, antialiased: antialiased)
-                let color = colorVector(
+            for _ in 0..<configuration.effectiveAntialiasCount() {
+                let ray = camera.ray(through: pixel, applyAntialias: configuration.antialiasing.isOn)
+                let color = rayTrace(
                     ray: ray,
-                    shapes: intersectables,
-                    depthRange: depthRange
+                    world: world,
+                    configuration: configuration,
+                    scatterCount: 0
                 )
 
                 colors.append(color)
@@ -49,17 +42,17 @@ public struct RayTracer {
         return p3str
     }
 
-    static func colorVector(
+    static func rayTrace(
         ray: Ray,
-        shapes: [Intersectable],
-        depthRange: Range<Double>,
-        recursionCount: Int = 0
+        world: World,
+        configuration: TraceConfiguration,
+        scatterCount: Int
     ) -> Vector3 {
         guard
             let intersection = nearestIntersection(
                 ray: ray,
-                shapes: shapes,
-                depthRange: depthRange
+                world: world,
+                depthRange: configuration.depthRange
             )
         else {
             let unitDirection = ray.direction.normalised
@@ -67,32 +60,35 @@ public struct RayTracer {
             return (1.0 - t) * Vector3.unit + t * Vector3(0.5, 0.7, 1.0)
         }
 
-        let target = intersection.hitPoint
-            + intersection.normal
-            + Sphere.unit.randomInteriorPoint
+        guard scatterCount < configuration.maxScatters else {
+            return Vector3.zero
+        }
 
-        let outgoingRay = Ray(
-            origin: intersection.hitPoint,
-            direction: target - intersection.hitPoint
-        )
+        guard let (attenuation, scatteredRay) = intersection.shape.material.scatter(incomingRay: ray, intersection: intersection) else {
+            return Vector3.zero
+        }
 
-        return 0.5 * colorVector(
-            ray: outgoingRay,
-            shapes: shapes,
-            depthRange: depthRange,
-            recursionCount: recursionCount + 1
+        return attenuation * rayTrace(
+            ray: scatteredRay,
+            world: world,
+            configuration: configuration,
+            scatterCount: scatterCount + 1
         )
     }
 
     static func nearestIntersection(
         ray: Ray,
-        shapes: [Intersectable],
+        world: World,
         depthRange: Range<Double>
-    ) -> IntersectionRecord? {
-        var nearest: IntersectionRecord?
+    ) -> Intersection? {
+        var nearest: Intersection?
 
-        for shape in shapes {
-            let intersection = shape.intersection(
+        for shape in world.shapes {
+            guard let intersectableShape = shape as? Intersectable else {
+                continue
+            }
+
+            let intersection = intersectableShape.intersect(
                 ray: ray,
                 tRange: depthRange
             )

@@ -10,15 +10,24 @@ import Foundation
 public struct Sphere: Shape {
     let center: Vector3
     let radius: Double
+    public let material: Material
 
-    public init(_ x: Double, _ y: Double, _ z: Double, _ radius: Double) {
+    public init(
+        _ x: Double,
+        _ y: Double,
+        _ z: Double,
+        radius: Double,
+        material: Material
+    ) {
         self.center = Vector3(x, y, z)
         self.radius = radius
+        self.material = material
     }
 
-    init(center: Vector3, radius: Double) {
+    init(center: Vector3, radius: Double, material: Material) {
         self.center = center
         self.radius = radius
+        self.material = material
     }
 }
 
@@ -26,7 +35,7 @@ public struct Sphere: Shape {
 
 extension Sphere: Intersectable {
 
-    func intersection(ray: Ray, tRange: Range<Double>) -> IntersectionRecord? {
+    func intersect(ray: Ray, tRange: Range<Double>) -> Intersection? {
         let centerOffset = ray.origin - center
 
         // Discriminant of the quadratic equation.
@@ -43,7 +52,8 @@ extension Sphere: Intersectable {
         let t1 = (-b - sqrt(discriminant)) / (2.0 * a)
         if tRange.contains(t1) {
             let hitPoint = t1 * ray
-            return IntersectionRecord(
+            return Intersection(
+                shape: self,
                 temp: t1,
                 hitPoint: hitPoint,
                 normal: (hitPoint - center) / radius
@@ -53,7 +63,8 @@ extension Sphere: Intersectable {
         let t2 = (-b + sqrt(discriminant)) / (2.0 * a)
         if tRange.contains(t2) {
             let hitPoint = t2 * ray
-            return IntersectionRecord(
+            return Intersection(
+                shape: self,
                 temp: t2,
                 hitPoint: hitPoint,
                 normal: (hitPoint - center) / radius
@@ -65,19 +76,11 @@ extension Sphere: Intersectable {
 
 }
 
-// MARK: - Unit Sphere at Origin
-
-extension Sphere {
-
-    static let unit = Sphere(center: Vector3.zero, radius: 1.0)
-
-}
-
 // MARK: - Random Interior Point
 
 extension Sphere {
 
-    var randomInteriorPoint: Vector3 {
+    static func randomInteriorPoint(radius: Double) -> Vector3 {
         while true {
             let unitRandom = Vector3(
                 Double.random(in: 0.0..<1.0),
