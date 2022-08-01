@@ -35,6 +35,14 @@ extension Vector3 {
 
     static let unit = Vector3(1.0, 1.0, 1.0)
 
+    private static let epsilon = 1.0e-8
+
+    var isNearZero: Bool {
+        abs(x) < Vector3.epsilon
+            && abs(y) < Vector3.epsilon
+            && abs(z) < Vector3.epsilon
+    }
+
 }
 
 // MARK: - Negation
@@ -192,43 +200,26 @@ extension Vector3 {
         refractiveIndex: Double
     ) -> Vector3 {
 
-        func direction() -> (Vector3, Double, Double) {
-            let dotted = self ⋅ normal
-
-            if dotted > Double.zero {
-                let cosine = (refractiveIndex * dotted) / length
-                return (-normal, refractiveIndex, cosine)
-
-            } else {
-                let cosine = -dotted / length
-                return (normal, 1.0 / refractiveIndex, cosine)
-            }
-        }
-
-        let (outwardNormal, outwardIndex, cosine) = direction()
+        let unitDirection = self.normalised
+        let cosTheta = min((-unitDirection) ⋅ normal, 1.0)
+        let sinTheta = sqrt(1.0 - cosTheta * cosTheta)
 
         func shouldSchlickReflect() -> Bool {
-            let r0 = (1.0 - outwardIndex) / (1.0 + outwardIndex)
-            let r0_squared = r0 * r0
-            let schlick = r0_squared + (1.0 - r0_squared) * pow(1.0 - cosine, 5)
+            let r0 = (1.0 - refractiveIndex) / (1.0 + refractiveIndex)
+            let r0_sqr = r0 * r0
+            let schlick = r0_sqr + (1.0 - r0_sqr) * pow(1.0 - cosTheta, 5)
 
-            return Double.random(in: 0..<1.0) > schlick
+            return Double.random(in: 0..<1.0) < schlick
         }
 
-        let dt = self.normalised ⋅ outwardNormal
-        let discriminant = 1.0 - refractiveIndex * refractiveIndex * (1.0 - dt * dt)
-        //let dt = self.normalised ⋅ outwardNormal
-        //let discriminant = 1.0 - outwardIndex * outwardIndex * (1.0 - dt * dt)
-
-        guard discriminant > Double.zero && !shouldSchlickReflect() else {
+        guard refractiveIndex * sinTheta <= 1.0, !shouldSchlickReflect() else {
             return reflected(normal: normal)
         }
 
-        let refraction =
-            outwardIndex * (self - outwardNormal * dt)
-                - outwardNormal * sqrt(discriminant)
+        let perp = refractiveIndex * (unitDirection + cosTheta * normal)
+        let para = -sqrt(abs(1.0 - perp.squareLength)) * normal
 
-        return refraction
+        return perp + para
     }
 
 }

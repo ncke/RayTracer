@@ -38,36 +38,40 @@ extension Sphere: Intersectable {
     func intersect(ray: Ray, tRange: Range<Double>) -> Intersection? {
         let centerOffset = ray.origin - center
 
-        // Discriminant of the quadratic equation.
-        let a = ray.direction ⋅ ray.direction
-        let b = 2.0 * centerOffset ⋅ ray.direction
-        let c = centerOffset ⋅ centerOffset - radius * radius
-        let discriminant = b * b - 4.0 * a * c
+        // Calculate discriminant of the quadratic equation.
+        let a = ray.direction.squareLength
+        let bHalf = centerOffset ⋅ ray.direction
+        let c = centerOffset.squareLength - radius * radius
+        let discriminant = bHalf * bHalf - a * c
 
         guard discriminant >= 0.0 else {
             // The ray is not incident with the sphere.
             return nil
         }
 
-        let t1 = (-b - sqrt(discriminant)) / (2.0 * a)
+        let sqrtd = sqrt(discriminant)
+
+        let t1 = (-bHalf - sqrtd) / a
         if tRange.contains(t1) {
             let hitPoint = t1 * ray
             return Intersection(
                 shape: self,
-                temp: t1,
+                hitDistance: t1,
                 hitPoint: hitPoint,
-                normal: (hitPoint - center) / radius
+                outwardNormal: (hitPoint - center) / radius,
+                incidentRay: ray
             )
         }
 
-        let t2 = (-b + sqrt(discriminant)) / (2.0 * a)
+        let t2 = (-bHalf + sqrtd) / a
         if tRange.contains(t2) {
             let hitPoint = t2 * ray
             return Intersection(
                 shape: self,
-                temp: t2,
+                hitDistance: t2,
                 hitPoint: hitPoint,
-                normal: (hitPoint - center) / radius
+                outwardNormal: (hitPoint - center) / radius,
+                incidentRay: ray
             )
         }
 

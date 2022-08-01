@@ -87,26 +87,51 @@ final class RayTracerTests: XCTestCase {
         return world
     }
 
+    static func glassBallSandwichWorld() -> World {
+        let world = World()
+
+        let earth = Sphere(
+            0.0, -100.0, 0.0,
+            radius: 100,
+            material: .lambertian(albedo: Albedo(0.8, 0.8, 0.0))
+        )
+
+        let glassBall = Sphere(
+            0.0, 1.0, 0.0,
+            radius: 1.0,
+            material: .dielectric(refractiveIndex: RefractiveIndex.glass)
+        )
+
+        let sphereBehind = Sphere(
+            1.25, 1.0, -2.0,
+            radius: 1.0,
+            material: .lambertian(albedo: Albedo(0.8, 0.2, 0.2))
+        )
+
+        let sphereInFront = Sphere(
+            -0.5, 0.5, 1.0,
+            radius: 0.5,
+            material: .lambertian(albedo: Albedo(0.2, 0.3, 0.4))
+        )
+
+        world.addShapes(earth, glassBall, sphereBehind, sphereInFront)
+
+        return world
+    }
+
     func testRayTracer() {
         let camera = Camera(
-            lookFrom: (9.0, 0.1, 4.0),//1,5
+            lookFrom: (9.0, 0.5, 2.5),
             lookAt: (0.0, 1.0, 0.0),
             verticalFieldOfView: 25.0,
             pixels: (800, 600)
         )
 
-        let world = RayTracerTests.randomSphereWorld(probability: 0.1)
+        let world = RayTracerTests.randomSphereWorld(probability: 0.5)
         var configuration = TraceConfiguration()
-        configuration.antialiasing = .off//.on(count: 20)
-        configuration.maxScatters = 25
+        configuration.antialiasing = .on(count: 20)
+        configuration.maxScatters = 20
         configuration.maxConcurrentPixels = 12
-
-
-        let w2 = World()
-        w2.addShape(Sphere(0.0, -100.5, -1, radius: 100, material: .lambertian(albedo: Albedo(0.8, 0.8, 0.0))))
-        w2.addShape(Sphere(-1,0,-1, radius: 1.0, material: .dielectric(refractiveIndex: RefractiveIndex.glass)))
-
-
 
         var image: ImageArray?
 
@@ -114,7 +139,7 @@ final class RayTracerTests: XCTestCase {
 
         let worker = RayTracer.trace(
             camera: camera,
-            world: w2,//world,
+            world: world,
             configuration: configuration
         ) { imageArray in
 

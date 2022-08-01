@@ -44,6 +44,7 @@ extension Material {
         case .dielectric(let refractiveIndex):
             return DielectricScattering.scatter(
                 refractiveIndex: refractiveIndex,
+                isFrontFace: intersection.isFrontFace,
                 incomingRay: incomingRay,
                 intersection: intersection
             )

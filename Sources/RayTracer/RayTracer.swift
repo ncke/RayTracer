@@ -54,10 +54,12 @@ extension RayTracer {
             return Vector3.zero
         }
 
-        guard let (attenuation, scatteredRay) = intersection.shape.material.scatter(
-            incomingRay: ray,
-            intersection: intersection
-        ) else {
+        guard
+            let (attenuation, scatteredRay) = intersection.shape.material.scatter(
+                incomingRay: ray,
+                intersection: intersection
+            )
+        else {
             return Vector3.zero
         }
 
@@ -138,7 +140,7 @@ public class RayTracerWorker {
         )
 
         writeQueue = DispatchQueue(
-            label: "com.raytracer.trace-queue",
+            label: "com.raytracer.write-queue",
             qos: configuration.traceQoS
         )
 

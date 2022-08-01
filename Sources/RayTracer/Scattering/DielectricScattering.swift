@@ -15,12 +15,17 @@ struct DielectricScattering {
 
     static func scatter(
         refractiveIndex: RefractiveIndex,
+        isFrontFace: Bool,
         incomingRay: Ray,
         intersection: Intersection
     ) -> (Vector3, Ray)? {
+
+        let index = isFrontFace ?
+            1.0 / refractiveIndex.index : refractiveIndex.index
+
         let refracted = incomingRay.direction.refracted(
             normal: intersection.normal,
-            refractiveIndex: refractiveIndex.index
+            refractiveIndex: index
         )
 
         let attenuation = DielectricScattering.unattenuated
