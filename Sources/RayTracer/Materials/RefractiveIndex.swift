@@ -12,11 +12,9 @@ import Foundation
 public struct RefractiveIndex {
 
     let index: Double
-    let invertedIndex: Double
 
     init(_ index: Double) {
         self.index = index
-        self.invertedIndex = 1.0 / index
     }
 
 }

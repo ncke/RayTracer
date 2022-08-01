@@ -189,29 +189,23 @@ extension Vector3 {
 
     func refracted(
         normal: Vector3,
-        refractiveIndex: RefractiveIndex
+        refractiveIndex: Double
     ) -> Vector3 {
 
-        func direction(
-            normal: Vector3,
-            refractiveIndex: RefractiveIndex
-        ) -> (Vector3, Double, Double) {
+        func direction() -> (Vector3, Double, Double) {
             let dotted = self ⋅ normal
 
             if dotted > Double.zero {
-                let cosine = (refractiveIndex.index * dotted) / length
-                return (-normal, refractiveIndex.index, cosine)
+                let cosine = (refractiveIndex * dotted) / length
+                return (-normal, refractiveIndex, cosine)
 
             } else {
                 let cosine = -dotted / length
-                return (normal, refractiveIndex.invertedIndex, cosine)
+                return (normal, 1.0 / refractiveIndex, cosine)
             }
         }
 
-        let (outwardNormal, outwardIndex, cosine) = direction(
-            normal: normal,
-            refractiveIndex: refractiveIndex
-        )
+        let (outwardNormal, outwardIndex, cosine) = direction()
 
         func shouldSchlickReflect() -> Bool {
             let r0 = (1.0 - outwardIndex) / (1.0 + outwardIndex)
@@ -222,12 +216,11 @@ extension Vector3 {
         }
 
         let dt = self.normalised ⋅ outwardNormal
-        let discriminant = 1.0 - outwardIndex * outwardIndex * (1.0 - dt * dt)
+        let discriminant = 1.0 - refractiveIndex * refractiveIndex * (1.0 - dt * dt)
+        //let dt = self.normalised ⋅ outwardNormal
+        //let discriminant = 1.0 - outwardIndex * outwardIndex * (1.0 - dt * dt)
 
-        let shouldRefract = discriminant > Double.zero
-            && !shouldSchlickReflect()
-
-        guard shouldRefract else {
+        guard discriminant > Double.zero && !shouldSchlickReflect() else {
             return reflected(normal: normal)
         }
 

@@ -17,6 +17,10 @@ public struct TraceConfiguration {
 
     var maxScatters = 50
 
+    var traceQoS = DispatchQoS.userInitiated
+
+    var maxConcurrentPixels = 8
+
 }
 
 // MARK: - Antialiasing

@@ -46,3 +46,11 @@ extension RGBColor {
     }
 
 }
+
+// MARK: - Black
+
+extension RGBColor {
+
+    static let black = RGBColor(0, 0, 0)
+
+}

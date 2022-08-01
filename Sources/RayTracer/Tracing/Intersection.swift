@@ -9,7 +9,7 @@ import Foundation
 
 struct Intersection {
     let shape: Shape
-    let temp: Double
+    let hitDistance: Double
     let hitPoint: Vector3
     let normal: Vector3
 }

@@ -9,64 +9,36 @@ import Foundation
 
 public struct Camera {
     let origin: Vector3
-    let size: (Double, Double)
-    let pixels: (Int, Int)
-
     private let dPixels: (Double, Double)
+    var pixels: (Int, Int) { (Int(dPixels.0), Int(dPixels.1)) }
     private let llCorner: Vector3
     private let horizontal: Vector3
     private let vertical: Vector3
 
     public init(
-        origin: (Double, Double, Double),
-        size: (Double, Double),
+        lookFrom: (Double, Double, Double),
+        lookAt: (Double, Double, Double),
+        viewUp: (Double, Double, Double) = (0.0, 0.1, 0.0),
+        verticalFieldOfView: Double,
         pixels: (Int, Int)
     ) {
-        self.origin = Vector3(origin)
-        self.size = size
-        self.pixels = pixels
-        self.dPixels = (Double(pixels.0), Double(pixels.1))
-        self.llCorner = Vector3(-0.5 * size.0, -0.5 * size.1, -1.0)
-        self.horizontal = Vector3(size.0, 0.0, 0.0)
-        self.vertical = Vector3(0.0, size.1, 0.0)
+        dPixels = (Double(pixels.0), Double(pixels.1))
+
+        let aspect = dPixels.0 / dPixels.1
+        let theta = verticalFieldOfView * Double.pi / 180.0
+        let halfHeight = tan(theta / 2.0)
+        let halfWidth = aspect * halfHeight
+
+        origin = Vector3(lookFrom)
+
+        let w = (origin - Vector3(lookAt)).normalised
+        let u = (Vector3(viewUp) ⨯ w).normalised
+        let v = w ⨯ u
+
+        llCorner = origin - halfWidth * u - halfHeight * v - w;
+        horizontal = 2.0 * halfWidth * u
+        vertical = 2.0 * halfHeight * v
     }
-}
-
-// MARK: - Pixels Sequence
-
-extension Camera {
-
-    struct PixelSequence: Sequence, IteratorProtocol {
-        private let pixels: (Int, Int)
-        private var current: (Int, Int)
-
-        init(pixels: (Int, Int)) {
-            self.pixels = pixels
-            self.current = (-1, pixels.1 - 1)
-        }
-
-        mutating func next() -> (Int, Int)? {
-            var (x, y) = current
-            x += 1
-
-            if x >= pixels.0 {
-                x = 0
-
-                y -= 1
-                if y < 0 {
-                    return nil
-                }
-            }
-
-            current = (x, y)
-            return current
-        }
-    }
-
-    var allPixels: PixelSequence {
-        PixelSequence(pixels: pixels)
-    }
-
 }
 
 // MARK: - Ray Generation
@@ -87,7 +59,7 @@ extension Camera {
 
         let ray = Ray(
             origin: origin,
-            direction: llCorner + u * horizontal + v * vertical
+            direction: llCorner + u * horizontal + v * vertical - origin
         )
 
         return ray

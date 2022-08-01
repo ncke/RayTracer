@@ -11,7 +11,7 @@ import Foundation
 
 struct DielectricScattering {
 
-    private static let unattenuating = Vector3(1.0, 1.0, 1.0)
+    private static let unattenuated = Vector3(1.0, 1.0, 1.0)
 
     static func scatter(
         refractiveIndex: RefractiveIndex,
@@ -20,10 +20,10 @@ struct DielectricScattering {
     ) -> (Vector3, Ray)? {
         let refracted = incomingRay.direction.refracted(
             normal: intersection.normal,
-            refractiveIndex: refractiveIndex
+            refractiveIndex: refractiveIndex.index
         )
 
-        let attenuation = DielectricScattering.unattenuating
+        let attenuation = DielectricScattering.unattenuated
 
         let scattered = Ray(
             origin: intersection.hitPoint,
