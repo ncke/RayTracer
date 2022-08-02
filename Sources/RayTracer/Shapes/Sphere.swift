@@ -80,6 +80,17 @@ extension Sphere: Intersectable {
 
 }
 
+// MARK: - Bounding Boxable
+
+extension Sphere: BoundingBoxable {
+
+    func boundingBox() -> AxisAlignedBoundingBox {
+        let radial = Vector3(radius, radius, radius)
+        return AxisAlignedBoundingBox(center - radial, center + radial)
+    }
+
+}
+
 // MARK: - Unit Radius
 
 extension Sphere {

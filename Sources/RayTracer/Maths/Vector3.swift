@@ -27,6 +27,21 @@ struct Vector3 {
     }
 }
 
+// MARK: - Subscript
+
+extension Vector3 {
+
+    subscript(_ i: Int) -> Double {
+        switch i {
+        case 0: return x
+        case 1: return y
+        case 2: return z
+        default: fatalError()
+        }
+    }
+
+}
+
 // MARK: - Zero and Unit
 
 extension Vector3 {
