@@ -11,6 +11,7 @@ public struct Camera {
     let origin: Vector3
     private let dPixels: (Double, Double)
     var pixels: (Int, Int) { (Int(dPixels.0), Int(dPixels.1)) }
+    var totalPixels: Int { Int(dPixels.0 * dPixels.1) }
     private let llCorner: Vector3
     private let horizontal: Vector3
     private let vertical: Vector3

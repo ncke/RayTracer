@@ -1,5 +1,5 @@
 //
-//  ImageArray.swift
+//  TraceImage.swift
 //  
 //
 //  Created by Nick on 31/07/2022.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ImageArray {
+public class TraceImage {
     let size: (Int, Int)
     var pixels: [[RGBColor]]
 
@@ -32,7 +32,7 @@ public class ImageArray {
 
 }
 
-public extension ImageArray {
+public extension TraceImage {
 
     var asP3String: String {
         var p3str: String = "P3\n\(xSize) \(ySize)\n255\n"
@@ -49,7 +49,7 @@ public extension ImageArray {
 
 // MARK: - Pixels Sequence
 
-extension ImageArray {
+extension TraceImage {
 
     struct PixelSequence: Sequence, IteratorProtocol {
         private let size: (Int, Int)

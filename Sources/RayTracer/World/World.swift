@@ -32,3 +32,42 @@ public extension World {
     }
 
 }
+
+// MARK: - Intersections
+
+extension World {
+
+    func nearestIntersection(
+        ray: Ray,
+        depthRange: Range<Double>
+    ) -> Intersection? {
+        var nearest: Intersection?
+
+        for shape in shapes {
+            guard let intersectableShape = shape as? Intersectable else {
+                continue
+            }
+
+            let intersection = intersectableShape.intersect(
+                ray: ray,
+                tRange: depthRange
+            )
+
+            guard let intersected = intersection else {
+                continue
+            }
+
+            guard let nearestSoFar = nearest else {
+                nearest = intersected
+                continue
+            }
+
+            if intersected.hitDistance < nearestSoFar.hitDistance {
+                nearest = intersected
+            }
+        }
+
+        return nearest
+    }
+
+}

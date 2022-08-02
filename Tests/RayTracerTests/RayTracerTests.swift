@@ -133,7 +133,7 @@ final class RayTracerTests: XCTestCase {
         configuration.maxScatters = 20
         configuration.maxConcurrentPixels = 12
 
-        var image: ImageArray?
+        var image: TraceImage?
 
         let semaphore = DispatchSemaphore(value: 0)
 
