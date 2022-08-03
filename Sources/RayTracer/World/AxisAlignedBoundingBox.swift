@@ -28,13 +28,9 @@ class AxisAlignedBoundingBox {
 
 }
 
-// MARK: - Intersectable
+// MARK: - Hit Testing
 
-extension AxisAlignedBoundingBox: Intersectable {
-
-    func intersect(ray: Ray, tRange: Range<Double>) -> Intersection? {
-        return nil
-    }
+extension AxisAlignedBoundingBox {
 
     func hit(ray: Ray, depthRange: Range<Double>) -> Bool {
         var tMin = depthRange.lowerBound
