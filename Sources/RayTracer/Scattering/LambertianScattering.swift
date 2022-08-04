@@ -12,7 +12,7 @@ import Foundation
 struct LambertianScattering {
 
     static func scatter(
-        albedo: Albedo,
+        texture: Texture,
         incomingRay: Ray,
         intersection: Intersection
     ) -> (Vector3, Ray)? {
@@ -26,7 +26,11 @@ struct LambertianScattering {
             direction: target - intersection.hitPoint
         )
 
-        let attenuation = albedo.vector
+        guard let textured = texture as? Textured else {
+            fatalError()
+        }
+
+        let attenuation = textured.color(u: 0.0, v: 0.0)
 
         return (attenuation, scattered)
     }

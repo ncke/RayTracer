@@ -3,16 +3,19 @@ import XCTest
 
 final class RayTracerTests: XCTestCase {
 
+    static func randomTexture() -> Texture {
+        ConstantTexture(
+            r: Double.random(in: 0..<1.0),
+            g: Double.random(in: 0..<1.0),
+            b: Double.random(in: 0..<1.0)
+        )
+    }
+
     static func randomMaterial() -> Material {
         let r = Double.random(in: 0..<1.0)
 
         if r < 0.8 {
-            let albedo = Albedo(
-                Double.random(in: 0..<1.0),
-                Double.random(in: 0..<1.0),
-                Double.random(in: 0..<1.0)
-            )
-            return .lambertian(albedo: albedo)
+            return .lambertian(texture: randomTexture())
 
         } else if r < 0.95 {
             let albedo = Albedo(
@@ -33,13 +36,15 @@ final class RayTracerTests: XCTestCase {
     static func randomSphereWorld(probability: Double) -> World {
         let world = World()
 
-        world.addShape(
-            Sphere(
-                0.0, -10000.0, 0.0,
-                radius: 10000.0,
-                material: .lambertian(albedo: Albedo(uniform: 0.5))
+        let baseSphere = Sphere(
+            0.0, -10000.0, 0.0,
+            radius: 10000.0,
+            material: .lambertian(
+                texture: ConstantTexture(uniform: 0.5)
             )
         )
+
+        world.addShape(baseSphere)
 
         for a in -11...11 {
             for b in -11...11 {
@@ -73,7 +78,9 @@ final class RayTracerTests: XCTestCase {
         let bigSphere2 = Sphere(
             -3.0, 1.0, 0.0,
              radius: 1.0,
-             material: .lambertian(albedo: Albedo(0.4, 0.2, 0.1))
+             material: .lambertian(
+                texture: ConstantTexture(r: 0.4, g: 0.2, b: 0.1)
+             )
         )
 
         let bigSphere3 = Sphere(
@@ -90,10 +97,12 @@ final class RayTracerTests: XCTestCase {
     static func glassBallSandwichWorld() -> World {
         let world = World()
 
-        let earth = Sphere(
+        let baseSphere = Sphere(
             0.0, -100.0, 0.0,
             radius: 100,
-            material: .lambertian(albedo: Albedo(0.8, 0.8, 0.0))
+            material: .lambertian(
+                texture: ConstantTexture(r: 0.8, g: 0.8, b: 0.0)
+            )
         )
 
         let glassBall = Sphere(
@@ -105,37 +114,43 @@ final class RayTracerTests: XCTestCase {
         let sphereBehind = Sphere(
             1.25, 1.0, -2.0,
             radius: 1.0,
-            material: .lambertian(albedo: Albedo(0.8, 0.2, 0.2))
+            material: .lambertian(
+                texture: ConstantTexture(r: 0.8, g: 0.2, b: 0.2)
+            )
         )
 
         let sphereInFront = Sphere(
             -0.5, 0.5, 1.0,
             radius: 0.5,
-            material: .lambertian(albedo: Albedo(0.2, 0.3, 0.4))
+            material: .lambertian(
+                texture: ConstantTexture(r: 0.2, g: 0.3, b: 0.4)
+            )
         )
 
-        world.addShapes(earth, glassBall, sphereBehind, sphereInFront)
+        world.addShapes(baseSphere, glassBall, sphereBehind, sphereInFront)
 
         return world
     }
 
     func testRayTracer() {
         let camera = Camera(
-            lookFrom: (9.0, 0.5, 2.5),
+            lookFrom: (9.0, 1.5, 2.5),
             lookAt: (0.0, 1.0, 0.0),
-            verticalFieldOfView: 25.0,
-            pixels: (800, 600)
+            verticalFieldOfView: 35.0,
+            pixels: (300, 200)
         )
 
-        let world = RayTracerTests.randomSphereWorld(probability: 0.5)
+        let world = RayTracerTests.randomSphereWorld(probability: 0.2)
         var configuration = TraceConfiguration()
-        configuration.antialiasing = .on(count: 20)
+        configuration.antialiasing = .off//.on(count: 20)
         configuration.maxScatters = 20
         configuration.maxConcurrentPixels = 12
 
         var image: TraceImage?
 
         let semaphore = DispatchSemaphore(value: 0)
+
+        let startTime = Date()
 
         let worker = RayTracer.trace(
             camera: camera,
@@ -148,6 +163,10 @@ final class RayTracerTests: XCTestCase {
         }
 
         semaphore.wait()
+
+        let stopTime = Date()
+
+        print("time elapsed: ", stopTime.timeIntervalSince(startTime), " secs")
 
         let docs = FileManager.default.urls(
             for: .documentDirectory,
