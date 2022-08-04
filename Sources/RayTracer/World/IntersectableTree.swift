@@ -11,7 +11,7 @@ import Foundation
 
 indirect enum IntersectableTree {
 
-    case leaf(intersectable: Intersectable)
+    case primitive(intersectable: Intersectable)
 
     case box(
         box: AxisAlignedBoundingBox,
@@ -21,7 +21,7 @@ indirect enum IntersectableTree {
 
 }
 
-// MARK: - Hit Testing
+// MARK: - Intersectable
 
 extension IntersectableTree: Intersectable {
 
@@ -37,8 +37,8 @@ extension IntersectableTree: Intersectable {
                 right: right
             )
 
-        case .leaf(let intersectable):
-            return intersectLeaf(
+        case .primitive(let intersectable):
+            return intersectPrimitive(
                 intersectable: intersectable,
                 ray: ray,
                 tRange: tRange
@@ -75,12 +75,116 @@ extension IntersectableTree: Intersectable {
         return nil
     }
 
-    private func intersectLeaf(
+    private func intersectPrimitive(
         intersectable: Intersectable,
         ray: Ray,
         tRange: Range<Double>
     ) -> Intersection? {
         return intersectable.intersect(ray: ray, tRange: tRange)
+    }
+
+}
+
+// MARK: - Tree Construction
+
+extension IntersectableTree {
+
+    static func make(intersectables: [Intersectable]) -> IntersectableTree? {
+        guard intersectables.count > 0 else {
+            return nil
+        }
+
+        if intersectables.count == 1 {
+            return .primitive(intersectable: intersectables[0])
+        }
+
+        let sorted = intersectables.sorted(by: Axis.random.comparator)
+
+        let half = sorted.count / 2
+        let leftIntersectables = sorted[0..<half]
+        let leftTree = make(intersectables: Array(leftIntersectables))
+        let rightIntersectables = sorted[half..<intersectables.count]
+        let rightTree = make(intersectables: Array(rightIntersectables))
+
+        guard
+            let box = AxisAlignedBoundingBox.surroundingBox(
+                leftTree,
+                rightTree
+            )
+        else {
+            return nil
+        }
+
+        return IntersectableTree.box(
+            box: box,
+            left: leftTree,
+            right: rightTree
+        )
+    }
+
+    private typealias
+    IntersectableComparator = (Intersectable, Intersectable) -> Bool
+
+    private enum Axis {
+        case xAxis
+        case yAxis
+        case zAxis
+
+        static var random: Axis {
+            let r = Int.random(in: 0..<3)
+            switch r {
+            case 0: return xAxis
+            case 1: return yAxis
+            case 2: return zAxis
+            default: fatalError()
+            }
+        }
+
+        private var index: Int {
+            switch self {
+            case .xAxis: return 0
+            case .yAxis: return 1
+            case .zAxis: return 2
+            }
+        }
+
+        var comparator: IntersectableComparator {
+            return { i0, i1 in
+                guard
+                    let b0 = i0 as? BoundingBoxable,
+                    let b1 = i1 as? BoundingBoxable
+                else {
+                    fatalError()
+                }
+
+                let box0 = b0.boundingBox()
+                let box1 = b1.boundingBox()
+
+                return box0.min[index] < box1.min[index]
+            }
+        }
+    }
+
+}
+
+// MARK: - Bounding Boxable
+
+extension IntersectableTree: BoundingBoxable {
+
+    func boundingBox() -> AxisAlignedBoundingBox {
+        switch self {
+
+        case .primitive(let intersectable):
+            guard let boundable = intersectable as? BoundingBoxable else {
+                fatalError()
+            }
+
+            return boundable.boundingBox()
+
+        case .box(let box, _, _):
+            return box
+
+        }
     }
 
 }

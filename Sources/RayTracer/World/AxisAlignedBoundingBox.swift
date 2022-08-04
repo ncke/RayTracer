@@ -7,14 +7,6 @@
 
 import Foundation
 
-// MARK: - Bounding Boxable
-
-protocol BoundingBoxable {
-
-    func boundingBox() -> AxisAlignedBoundingBox
-
-}
-
 // MARK: - Axis Aligned Bounding Box
 
 class AxisAlignedBoundingBox {
@@ -58,14 +50,44 @@ extension AxisAlignedBoundingBox {
 
 }
 
+// MARK: - Bounding Boxable
+
+protocol BoundingBoxable {
+
+    func boundingBox() -> AxisAlignedBoundingBox
+
+}
+
+extension AxisAlignedBoundingBox: BoundingBoxable {
+
+    func boundingBox() -> AxisAlignedBoundingBox {
+        return self
+    }
+}
+
 // MARK: - Surrounding Boxes
 
 extension AxisAlignedBoundingBox {
 
     static func surroundingBox(
-        _ box0: AxisAlignedBoundingBox,
-        _ box1: AxisAlignedBoundingBox
-    ) -> AxisAlignedBoundingBox {
+        _ boxable0: BoundingBoxable?,
+        _ boxable1: BoundingBoxable?
+    ) -> AxisAlignedBoundingBox? {
+        if let boxable0 = boxable0, boxable1 == nil {
+            return boxable0.boundingBox()
+        }
+
+        if boxable0 == nil, let boxable1 = boxable1 {
+            return boxable1.boundingBox()
+        }
+
+        guard let boxable0 = boxable0, let boxable1 = boxable1 else {
+            return nil
+        }
+
+        let box0 = boxable0.boundingBox()
+        let box1 = boxable1.boundingBox()
+
         let sml = Vector3(
             Swift.min(box0.min.x, box1.min.x),
             Swift.min(box0.min.y, box1.min.y),

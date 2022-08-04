@@ -36,12 +36,14 @@ extension RayTracer {
 
     static func rayTrace(
         ray: Ray,
-        world: World,
+        tree: IntersectableTree?,
         configuration: TraceConfiguration,
         scatterCount: Int
     ) -> Vector3 {
         guard
-            let intersection = world.nearestIntersection(
+            let tree = tree,
+            let intersection = World.nearestIntersection(
+                intersectableTree: tree,
                 ray: ray,
                 depthRange: configuration.depthRange
             )
@@ -66,7 +68,7 @@ extension RayTracer {
 
         return attenuation * rayTrace(
             ray: scatteredRay,
-            world: world,
+            tree: tree,
             configuration: configuration,
             scatterCount: scatterCount + 1
         )

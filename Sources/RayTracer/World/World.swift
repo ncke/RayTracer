@@ -37,37 +37,27 @@ public extension World {
 
 extension World {
 
-    func nearestIntersection(
+    func asIntersectableTree() -> IntersectableTree? {
+        let qualifyingShapes: [Intersectable] = shapes.compactMap { shape in
+            guard
+                shape is BoundingBoxable,
+                let intersectableShape = shape as? Intersectable
+            else {
+                return nil
+            }
+
+            return intersectableShape as Intersectable
+        }
+
+        return IntersectableTree.make(intersectables: qualifyingShapes)
+    }
+
+    static func nearestIntersection(
+        intersectableTree: IntersectableTree,
         ray: Ray,
         depthRange: Range<Double>
     ) -> Intersection? {
-        var nearest: Intersection?
-
-        for shape in shapes {
-            guard let intersectableShape = shape as? Intersectable else {
-                continue
-            }
-
-            let intersection = intersectableShape.intersect(
-                ray: ray,
-                tRange: depthRange
-            )
-
-            guard let intersected = intersection else {
-                continue
-            }
-
-            guard let nearestSoFar = nearest else {
-                nearest = intersected
-                continue
-            }
-
-            if intersected.hitDistance < nearestSoFar.hitDistance {
-                nearest = intersected
-            }
-        }
-
-        return nearest
+        intersectableTree.intersect(ray: ray, tRange: depthRange)
     }
 
 }

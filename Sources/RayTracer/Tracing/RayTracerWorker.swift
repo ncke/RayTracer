@@ -27,6 +27,7 @@ public class RayTracerWorker {
     private let world: World
     private let camera: Camera
     private let configuration: TraceConfiguration
+    private let intersectableTree: IntersectableTree?
     private let progressDelegate: RayTracerProgressDelegate?
     private var completion: RayTraceCompletion?
     private let traceQueue: DispatchQueue
@@ -51,6 +52,7 @@ public class RayTracerWorker {
         self.completion = completion
         self.pixelsTotal = camera.totalPixels
         self.pixelsRemaining = pixelsTotal
+        self.intersectableTree = world.asIntersectableTree()
 
         traceQueue = DispatchQueue(
             label: "com.raytracer.trace-queue",
@@ -96,7 +98,7 @@ public class RayTracerWorker {
 
                     let color = RayTracer.rayTrace(
                         ray: ray,
-                        world: self.world,
+                        tree: self.intersectableTree,
                         configuration: self.configuration,
                         scatterCount: 0
                     )

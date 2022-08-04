@@ -34,6 +34,11 @@ public class TraceImage {
 
 public extension TraceImage {
 
+    func rgbColor(at coordinate: (Int, Int)) -> (Int, Int, Int) {
+        let rgb = pixel(at: coordinate)
+        return (rgb.red, rgb.green, rgb.blue)
+    }
+
     var asP3String: String {
         var p3str: String = "P3\n\(xSize) \(ySize)\n255\n"
 
