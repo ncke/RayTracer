@@ -36,12 +36,16 @@ final class RayTracerTests: XCTestCase {
     static func randomSphereWorld(probability: Double) -> World {
         let world = World()
 
+        let checkerTexture = CheckerTexture(
+            ConstantTexture(r: 0.2, g: 0.3, b: 0.1),
+            ConstantTexture(uniform: 0.9),
+            scale: 10.0
+        )
+
         let baseSphere = Sphere(
             0.0, -10000.0, 0.0,
             radius: 10000.0,
-            material: .lambertian(
-                texture: ConstantTexture(uniform: 0.5)
-            )
+            material: .lambertian(texture: checkerTexture)
         )
 
         world.addShape(baseSphere)
@@ -137,12 +141,12 @@ final class RayTracerTests: XCTestCase {
             lookFrom: (9.0, 1.5, 2.5),
             lookAt: (0.0, 1.0, 0.0),
             verticalFieldOfView: 35.0,
-            pixels: (300, 200)
+            pixels: (800, 600)
         )
 
-        let world = RayTracerTests.randomSphereWorld(probability: 0.2)
+        let world = RayTracerTests.randomSphereWorld(probability: 0.6)
         var configuration = TraceConfiguration()
-        configuration.antialiasing = .off//.on(count: 20)
+        configuration.antialiasing = .on(count: 20)
         configuration.maxScatters = 20
         configuration.maxConcurrentPixels = 12
 

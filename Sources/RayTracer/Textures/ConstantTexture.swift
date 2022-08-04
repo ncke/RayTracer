@@ -1,5 +1,5 @@
 //
-//  Texture.swift
+//  ConstantTexture.swift
 //  
 //
 //  Created by Nick on 04/08/2022.
@@ -7,32 +7,28 @@
 
 import Foundation
 
-public class Texture {}
-
-protocol Textured {
-
-    func color(u: Double, v: Double) -> Vector3
-
-}
+// MARK: - Constant Texture
 
 public class ConstantTexture: Texture {
 
     let textureColor: Vector3
 
-    init(r: Double, g: Double, b: Double) {
+    public init(r: Double, g: Double, b: Double) {
         textureColor = Vector3(r, g, b)
     }
 
-    init(uniform: Double) {
+    public init(uniform: Double) {
         textureColor = Vector3(uniform: uniform)
     }
 
 }
 
+// MARK: - Textured
+
 extension ConstantTexture: Textured {
 
-    func color(u: Double, v: Double) -> Vector3 {
+    func color(u: Double, v: Double, hitPoint: Vector3) -> Vector3 {
         return textureColor
     }
-    
+
 }

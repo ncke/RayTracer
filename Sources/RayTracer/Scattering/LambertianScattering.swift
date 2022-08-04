@@ -30,7 +30,11 @@ struct LambertianScattering {
             fatalError()
         }
 
-        let attenuation = textured.color(u: 0.0, v: 0.0)
+        let attenuation = textured.color(
+            u: 0.0,
+            v: 0.0,
+            hitPoint: intersection.hitPoint
+        )
 
         return (attenuation, scattered)
     }
