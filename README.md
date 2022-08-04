@@ -2,7 +2,7 @@
 Implementing a simple ray tracer in Swift.
 
 ### Sample.
-![image](https://github.com/ncke/RayTracer/blob/30a39ad2a17c6c20186e1616eb99c506cb9e1781/Samples/2022-08-01-spheres.png)
+![image](https://github.com/ncke/RayTracer/blob/30a39ad2a17c6c20186e1616eb99c506cb9e1781/Samples/2022-08-04-spheres.png)
 
 ### Progress.
 - Development of the  ray tracer is following Peter Shirley's Ray Tracing series.
