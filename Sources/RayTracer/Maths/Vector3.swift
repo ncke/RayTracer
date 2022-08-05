@@ -58,6 +58,14 @@ extension Vector3 {
             && abs(z) < Vector3.epsilon
     }
 
+    static var randomUnitVector: Vector3 {
+        Vector3(
+            -1.0 + Double.random(in: 0..<2.0),
+            -1.0 + Double.random(in: 0..<2.0),
+            -1.0 + Double.random(in: 0..<2.0)
+        ).normalised
+    }
+
 }
 
 // MARK: - Negation
@@ -235,6 +243,20 @@ extension Vector3 {
         let para = -sqrt(abs(1.0 - perp.squareLength)) * normal
 
         return perp + para
+    }
+
+}
+
+// MARK: - Hermite Cubic
+
+extension Vector3 {
+
+    var hermiteCubic: Vector3 {
+        Vector3(
+            x * x * (3.0 - 2.0 * x),
+            y * y * (3.0 - 2.0 * y),
+            z * z * (3.0 - 2.0 * z)
+        )
     }
 
 }

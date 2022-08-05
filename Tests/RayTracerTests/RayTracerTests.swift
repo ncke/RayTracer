@@ -136,17 +136,39 @@ final class RayTracerTests: XCTestCase {
         return world
     }
 
+    func perlinSpheresWorld() -> World {
+        let world = World()
+
+        let baseSphere = Sphere(
+            0.0, -1000.0, 0.0,
+            radius: 1000.0,
+            material: .lambertian(texture: NoiseTexture(scale: 8.0))
+        )
+
+        let topSphere = Sphere(
+            0.0, 2.0, 0.0,
+            radius: 2.0,
+            material: .lambertian(texture: NoiseTexture(scale: 8.0))
+        )
+
+        world.addShape(baseSphere)
+        world.addShape(topSphere)
+
+        return world
+    }
+
     func testRayTracer() {
         let camera = Camera(
-            lookFrom: (9.0, 0.5, 2.5),
+            lookFrom: (9.0, 1.5, 2.5),
             lookAt: (0.0, 1.0, 0.0),
             verticalFieldOfView: 35.0,
             pixels: (800, 600)
         )
 
-        let world = RayTracerTests.randomSphereWorld(probability: 0.8)
+        //let world = RayTracerTests.randomSphereWorld(probability: 0.8)
+        let world = perlinSpheresWorld()
         var configuration = TraceConfiguration()
-        configuration.antialiasing = .on(count: 20)
+        configuration.antialiasing = .off//.on(count: 20)
         configuration.maxScatters = 50
         configuration.maxConcurrentPixels = 12
 

@@ -75,11 +75,9 @@ public class RayTracerWorker {
     func commit() {
         writeQueue.async {
             guard let pixel = self.pixels.next() else {
-                if self.working == 0 {
-                    if let completion = self.completion {
-                        self.completion = nil
-                        completion(self.imageArray)
-                    }
+                if self.working == 0, let completion = self.completion {
+                    self.completion = nil
+                    completion(self.imageArray)
                 }
 
                 return
@@ -96,7 +94,7 @@ public class RayTracerWorker {
                         applyAntialias: self.configuration.antialiasing.isOn
                     )
 
-                    let color = RayTracer.rayTrace(
+                    let color = RayTracerWorker.rayTrace(
                         ray: ray,
                         tree: self.intersectableTree,
                         configuration: self.configuration,
@@ -137,6 +135,52 @@ public class RayTracerWorker {
                 }
             }
         }
+    }
+
+}
+
+// MARK: - Ray Tracing
+
+extension RayTracerWorker {
+
+    static func rayTrace(
+        ray: Ray,
+        tree: IntersectableTree?,
+        configuration: TraceConfiguration,
+        scatterCount: Int
+    ) -> Vector3 {
+        guard
+            let tree = tree,
+            let intersection = World.nearestIntersection(
+                intersectableTree: tree,
+                ray: ray,
+                depthRange: configuration.depthRange
+            )
+        else {
+            let unitDirection = ray.direction.normalised
+            let t = 0.5 * (unitDirection.y + 1.0)
+            return (1.0 - t) * Vector3.unit + t * Vector3(0.5, 0.7, 1.0)
+        }
+
+        guard scatterCount < configuration.maxScatters else {
+            return Vector3.zero
+        }
+
+        guard
+            let (attenuation, scatteredRay) = intersection.shape.material.scatter(
+                incomingRay: ray,
+                intersection: intersection
+            )
+        else {
+            return Vector3.zero
+        }
+
+        return attenuation * rayTrace(
+            ray: scatteredRay,
+            tree: tree,
+            configuration: configuration,
+            scatterCount: scatterCount + 1
+        )
     }
 
 }
