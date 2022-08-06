@@ -45,10 +45,7 @@ extension Perlin {
         let offsets = position - floors
 
         let locality = makeLocality(floors: floors)
-        return interpolate(
-            locality: locality,
-            offsets: offsets
-        )
+        return interpolate(locality: locality, offsets: offsets)
     }
 
 }
@@ -81,35 +78,31 @@ private extension Perlin {
         return locality
     }
 
-    func interpolate(locality: TrilinearLocality, offsets: Vector3) -> Double {
-        let hermite = offsets.hermiteCubic
-        var accum = 0.0
+    static var cube: [Vector3] = {
+        var result = [Vector3]()
 
         for i in 0..<2 {
             for j in 0..<2 {
                 for k in 0..<2 {
-
-                    let id = Double(i)
-                    let jd = Double(j)
-                    let kd = Double(k)
-
-                    let weight = Vector3(
-                        offsets.x - id,
-                        offsets.y - jd,
-                        offsets.z - kd
-                    )
-
-                    let c = (id * hermite.x + (1.0 - id) * (1.0 - hermite.x))
-                        * (jd * hermite.y + (1.0 - jd) * (1.0 - hermite.y))
-                        * (kd * hermite.z + (1.0 - kd) * (1.0 - hermite.z))
-
-
-                    accum += c * (locality[i][j][k] ⋅ weight)
+                    let vector = Vector3(Double(i), Double(j), Double(k))
+                    result.append(vector)
                 }
             }
         }
 
-        return accum
+        return result
+    }()
+
+    func interpolate(locality: TrilinearLocality, offsets: Vector3) -> Double {
+        let hermite = offsets.hermiteCubic
+
+        return Perlin.cube.reduce(0.0) { accum, ijk in
+            let weight = offsets - ijk
+            let f = ijk * hermite + (Vector3.unit - ijk) * (Vector3.unit - hermite)
+            let g = f.x * f.y * f.z
+            let (i, j, k) = ijk.asIntegers
+            return accum + g * (locality[i][j][k] ⋅ weight)
+        }
     }
 
 }

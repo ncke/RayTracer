@@ -139,16 +139,18 @@ final class RayTracerTests: XCTestCase {
     func perlinSpheresWorld() -> World {
         let world = World()
 
+        let baseTexture = NoiseTexture(r: 0.2, g: 0.2, b: 1.0, scale: 4.0)
         let baseSphere = Sphere(
             0.0, -1000.0, 0.0,
             radius: 1000.0,
-            material: .lambertian(texture: NoiseTexture(scale: 8.0))
+            material: .lambertian(texture: baseTexture)
         )
 
+        let topTexture = NoiseTexture(r: 0.2, g: 1.0, b: 0.2, scale: 8.0)
         let topSphere = Sphere(
             0.0, 2.0, 0.0,
             radius: 2.0,
-            material: .lambertian(texture: NoiseTexture(scale: 8.0))
+            material: .lambertian(texture: topTexture)
         )
 
         world.addShape(baseSphere)

@@ -268,3 +268,13 @@ extension Vector3 {
     }
 
 }
+
+// MARK: - Integers
+
+extension Vector3 {
+
+    var asIntegers: (Int, Int, Int) {
+        (Int(self.x), Int(self.y), Int(self.z))
+    }
+
+}
