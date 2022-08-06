@@ -170,7 +170,7 @@ final class RayTracerTests: XCTestCase {
         //let world = RayTracerTests.randomSphereWorld(probability: 0.8)
         let world = perlinSpheresWorld()
         var configuration = TraceConfiguration()
-        configuration.antialiasing = .off//.on(count: 20)
+        configuration.antialiasing = .on(count: 20)
         configuration.maxScatters = 50
         configuration.maxConcurrentPixels = 12
 
