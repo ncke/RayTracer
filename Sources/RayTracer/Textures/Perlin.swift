@@ -26,16 +26,7 @@ struct Perlin {
     }
 
     private static func generatePermutation() -> [Int] {
-        var permutation = (0..<256).map { i in i }
-
-        (0..<255).reversed().forEach { idx in
-            let elem = permutation[idx]
-            let target = Int.random(in: 0..<(idx + 1))
-            permutation[idx] = permutation[target]
-            permutation[target] = elem
-        }
-
-        return permutation
+        (0..<256).map { i in i }.shuffled()
     }
 
 }
@@ -135,7 +126,7 @@ extension Perlin {
         for _ in 0..<depth {
             accum += weight * noise(position: temp)
             weight *= 0.5
-            temp = 2.0 * temp
+            temp *= 2.0
         }
 
         return abs(accum)

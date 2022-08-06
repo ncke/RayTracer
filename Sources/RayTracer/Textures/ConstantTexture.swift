@@ -27,7 +27,7 @@ public class ConstantTexture: Texture {
 
 extension ConstantTexture: Textured {
 
-    func color(u: Double, v: Double, hitPoint: Vector3) -> Vector3 {
+    func color(u: Double, v: Double, position: Vector3) -> Vector3 {
         return textureColor
     }
 

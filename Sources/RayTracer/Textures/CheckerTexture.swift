@@ -33,14 +33,14 @@ public class CheckerTexture: Texture {
 
 extension CheckerTexture: Textured {
 
-    func color(u: Double, v: Double, hitPoint: Vector3) -> Vector3 {
-        let sines = sin(scale * hitPoint.x)
-            * sin(scale * hitPoint.y)
-            * sin(scale * hitPoint.z)
+    func color(u: Double, v: Double, position: Vector3) -> Vector3 {
+        let sines = sin(scale * position.x)
+            * sin(scale * position.y)
+            * sin(scale * position.z)
 
         return sines < Double.zero
-            ? oddTextured.color(u: u, v: v, hitPoint: hitPoint)
-            : evenTextured.color(u: u, v: v, hitPoint: hitPoint)
+            ? oddTextured.color(u: u, v: v, position: position)
+            : evenTextured.color(u: u, v: v, position: position)
     }
 
 }

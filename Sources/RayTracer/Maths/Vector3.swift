@@ -112,6 +112,10 @@ extension Vector3 {
         lhs.z = lhs.z * rhs.z
     }
 
+    static func *= (lhs: inout Vector3, rhs: Double) {
+        lhs = lhs * rhs
+    }
+
     static func / (lhs: Vector3, rhs: Vector3) -> Vector3 {
         Vector3(lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z)
     }
@@ -120,6 +124,10 @@ extension Vector3 {
         lhs.x = lhs.x / rhs.x
         lhs.y = lhs.y / rhs.y
         lhs.z = lhs.z / rhs.z
+    }
+
+    static func /= (lhs: inout Vector3, rhs: Double) {
+        lhs = lhs / rhs
     }
 
 }
