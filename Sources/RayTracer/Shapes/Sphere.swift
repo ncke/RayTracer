@@ -54,11 +54,14 @@ extension Sphere: Intersectable {
         let t1 = (-bHalf - sqrtd) / a
         if tRange.contains(t1) {
             let hitPoint = t1 * ray
+            let outwardNormal = (hitPoint - center) / radius
+
             return Intersection(
                 shape: self,
                 hitDistance: t1,
                 hitPoint: hitPoint,
-                outwardNormal: (hitPoint - center) / radius,
+                uvCoordinate: sphereUV(position: outwardNormal),
+                outwardNormal: outwardNormal,
                 incidentRay: ray
             )
         }
@@ -66,16 +69,28 @@ extension Sphere: Intersectable {
         let t2 = (-bHalf + sqrtd) / a
         if tRange.contains(t2) {
             let hitPoint = t2 * ray
+            let outwardNormal = (hitPoint - center) / radius
+
             return Intersection(
                 shape: self,
                 hitDistance: t2,
                 hitPoint: hitPoint,
-                outwardNormal: (hitPoint - center) / radius,
+                uvCoordinate: sphereUV(position: outwardNormal),
+                outwardNormal: outwardNormal,
                 incidentRay: ray
             )
         }
 
         return nil
+    }
+
+    private func sphereUV(position: Vector3) -> (Double, Double) {
+        let phi = atan2(-position.z, position.x) + Double.pi
+        let theta = acos(-position.y)
+        let u = phi / (2.0 * Double.pi)
+        let v = theta / Double.pi
+
+        return (u, v)
     }
 
 }

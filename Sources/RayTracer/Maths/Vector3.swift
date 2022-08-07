@@ -22,6 +22,10 @@ struct Vector3 {
         self.init(tuple.0, tuple.1, tuple.2)
     }
 
+    init(_ tuple: (Int, Int, Int)) {
+        self.init(Double(tuple.0), Double(tuple.1), Double(tuple.2))
+    }
+
     init(uniform: Double) {
         self.init(uniform, uniform, uniform)
     }

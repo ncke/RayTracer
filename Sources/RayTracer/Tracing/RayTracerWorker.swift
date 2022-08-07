@@ -23,7 +23,7 @@ public protocol RayTracerProgressDelegate {
 // MARK: - Worker
 
 public class RayTracerWorker {
-    private let imageArray: TraceImage
+    private let imageArray: ImageMap
     private let world: World
     private let camera: Camera
     private let configuration: TraceConfiguration
@@ -34,7 +34,7 @@ public class RayTracerWorker {
     private let writeQueue: DispatchQueue
     private let pixelsTotal: Int
     private var pixelsRemaining: Int
-    private var pixels: TraceImage.PixelSequence
+    private var pixels: ImageMap.PixelSequence
     private var working = 0
 
     init(
@@ -44,7 +44,7 @@ public class RayTracerWorker {
         progressDelegate: RayTracerProgressDelegate?,
         completion: @escaping RayTraceCompletion
     ) {
-        self.imageArray = TraceImage(size: camera.pixels)
+        self.imageArray = ImageMap(size: camera.pixels)
         self.world = world
         self.camera = camera
         self.configuration = configuration

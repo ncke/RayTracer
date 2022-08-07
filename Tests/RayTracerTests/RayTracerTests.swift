@@ -159,6 +159,30 @@ final class RayTracerTests: XCTestCase {
         return world
     }
 
+    func imageTextureSphereWorld() -> World {
+        let world = World()
+
+        let url = Bundle.module.url(
+            forResource: "Earth-2048x1024",
+            withExtension: "jpeg"
+        )!
+
+        let data = try! Data(contentsOf: url)
+        let nsImage = NSImage(data: data)!
+        let imageMap = ImageMap.fromNSImage(nsImage)!
+
+        let earthTexture = ImageTexture(imageMap: imageMap)
+        let earthSphere = Sphere(
+            0.0, 2.0, 0.0,
+            radius: 2.0,
+            material: .lambertian(texture: earthTexture)
+        )
+
+        world.addShape(earthSphere)
+
+        return world
+    }
+
     func testRayTracer() {
         let camera = Camera(
             lookFrom: (9.0, 1.5, 2.5),
@@ -168,13 +192,14 @@ final class RayTracerTests: XCTestCase {
         )
 
         //let world = RayTracerTests.randomSphereWorld(probability: 0.8)
-        let world = perlinSpheresWorld()
+        //let world = perlinSpheresWorld()
+        let world = imageTextureSphereWorld()
         var configuration = TraceConfiguration()
-        configuration.antialiasing = .on(count: 20)
+        configuration.antialiasing = .off//.on(count: 20)
         configuration.maxScatters = 50
         configuration.maxConcurrentPixels = 12
 
-        var image: TraceImage?
+        var image: ImageMap?
 
         let semaphore = DispatchSemaphore(value: 0)
 
@@ -194,7 +219,7 @@ final class RayTracerTests: XCTestCase {
 
         let stopTime = Date()
 
-        print("time elapsed: ", stopTime.timeIntervalSince(startTime), " secs")
+        print("⏱ time elapsed: ", stopTime.timeIntervalSince(startTime), " secs")
 
         let docs = FileManager.default.urls(
             for: .documentDirectory,

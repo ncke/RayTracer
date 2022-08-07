@@ -11,6 +11,7 @@ struct Intersection {
     let shape: Shape
     let hitDistance: Double
     let hitPoint: Vector3
+    let uvCoordinate: (Double, Double)
     let normal: Vector3
     let isFrontFace: Bool
 }
@@ -21,12 +22,14 @@ extension Intersection {
         shape: Shape,
         hitDistance: Double,
         hitPoint: Vector3,
+        uvCoordinate: (Double, Double),
         outwardNormal: Vector3,
         incidentRay: Ray
     ) {
         self.shape = shape
         self.hitDistance = hitDistance
         self.hitPoint = hitPoint
+        self.uvCoordinate = uvCoordinate
 
         isFrontFace = (incidentRay.direction ⋅ outwardNormal) < Double.zero
         normal = isFrontFace ? outwardNormal : -outwardNormal

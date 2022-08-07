@@ -1,5 +1,5 @@
 //
-//  TraceImage.swift
+//  ImageMap.swift
 //  
 //
 //  Created by Nick on 31/07/2022.
@@ -7,12 +7,14 @@
 
 import Foundation
 
-public class TraceImage {
+// MARK: - Image Map
+
+public class ImageMap {
     let size: (Int, Int)
     var pixels: [[RGBColor]]
 
-    private var xSize: Int { size.0 }
-    private var ySize: Int { size.1 }
+    var xSize: Int { size.0 }
+    var ySize: Int { size.1 }
 
     init(size: (Int, Int)) {
         self.size = size
@@ -22,8 +24,19 @@ public class TraceImage {
         )
     }
 
+}
+
+// MARK: - Get and Set
+
+extension ImageMap {
+
     func pixel(at coordinate: (Int, Int)) -> RGBColor {
         pixels[coordinate.1][coordinate.0]
+    }
+
+    func rgbColor(at coordinate: (Int, Int)) -> (Int, Int, Int) {
+        let rgb = pixel(at: coordinate)
+        return (rgb.red, rgb.green, rgb.blue)
     }
 
     func setPixel(at coordinate: (Int, Int), rgb: RGBColor) {
@@ -32,12 +45,9 @@ public class TraceImage {
 
 }
 
-public extension TraceImage {
+// MARK: - P3 Format
 
-    func rgbColor(at coordinate: (Int, Int)) -> (Int, Int, Int) {
-        let rgb = pixel(at: coordinate)
-        return (rgb.red, rgb.green, rgb.blue)
-    }
+public extension ImageMap {
 
     var asP3String: String {
         var p3str: String = "P3\n\(xSize) \(ySize)\n255\n"
@@ -54,7 +64,7 @@ public extension TraceImage {
 
 // MARK: - Pixels Sequence
 
-extension TraceImage {
+extension ImageMap {
 
     struct PixelSequence: Sequence, IteratorProtocol {
         private let size: (Int, Int)
@@ -88,3 +98,49 @@ extension TraceImage {
     }
 
 }
+
+// MARK: - NSImage Helper
+
+#if canImport(AppKit)
+
+import AppKit
+
+extension ImageMap {
+
+    static func fromNSImage(_ image: NSImage) -> ImageMap? {
+        guard let data = image.tiffRepresentation else {
+            return nil
+        }
+
+        let reps = NSBitmapImageRep.imageReps(with: data)
+
+        guard reps.count > 0, let bitmap = reps[0] as? NSBitmapImageRep else {
+            return nil
+        }
+
+        let size = (Int(bitmap.size.width), Int(bitmap.size.height))
+
+        let imageMap = ImageMap(size: size)
+        for x in 0..<imageMap.xSize {
+            for y in 0..<imageMap.ySize {
+                guard let color = bitmap.colorAt(x: x, y: y) else {
+                    fatalError()
+                }
+
+                let rgb = RGBColor(
+                    color.redComponent,
+                    color.greenComponent,
+                    color.blueComponent
+                )
+
+                let coord = (x, size.1 - 1 - y)
+                imageMap.setPixel(at: coord, rgb: rgb)
+            }
+        }
+
+        return imageMap
+    }
+
+}
+
+#endif

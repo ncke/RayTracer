@@ -7,7 +7,7 @@ import Foundation
 
 // MARK: - Ray Tracer
 
-public typealias RayTraceCompletion = (TraceImage) -> Void
+public typealias RayTraceCompletion = (ImageMap) -> Void
 
 public struct RayTracer {
 

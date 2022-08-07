@@ -23,6 +23,11 @@ let package = Package(
             dependencies: []),
         .testTarget(
             name: "RayTracerTests",
-            dependencies: ["RayTracer"]),
+            dependencies: ["RayTracer"],
+            resources: [
+                .copy("TextureImages/Earth-1300x1300.png"),
+                .copy("TextureImages/Earth-2048x1024.jpeg")
+            ]
+        ),
     ]
 )

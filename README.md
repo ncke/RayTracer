@@ -15,6 +15,8 @@ Implementing a simple ray tracer in Swift.
 
 Glassner, A. S. (1990) 'Ray Tracing for Realism', BYTE, 15(13), December, pp. 263-271. Available at https://vintageapple.org/byte/pdf/199012_Byte_Magazine_Vol_15-13_State_of_the_Art_Advanced_Graphics.pdf (Accessed 1 January 2021).
 
+NASA (2005) 'Land Surface, Shallow Water, and Shaded Topography', Earth Observatory. Available at https://earthobservatory.nasa.gov/features/BlueMarble/BlueMarble_2002.php (Accessed 7 August 2022). 
+
 Shirley, P. (2020) 'Ray Tracing in One Weekend'. Available at https://github.com/RayTracing/raytracing.github.io (Accessed 1 August 2022).
 
 Shirley, P. (2020) 'Ray Tracing: the Next Week'. Available at https://github.com/RayTracing/raytracing.github.io (Accessed 2 August 2022).
