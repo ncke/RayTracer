@@ -72,6 +72,12 @@ public class RayTracerWorker {
         }
     }
 
+}
+
+// MARK: - Commit Work
+
+extension RayTracerWorker {
+
     func commit() {
         writeQueue.async {
             guard let pixel = self.pixels.next() else {
@@ -157,6 +163,8 @@ extension RayTracerWorker {
                 depthRange: configuration.depthRange
             )
         else {
+            return Vector3(0.0, 0.0, 0.0)
+            
             let unitDirection = ray.direction.normalised
             let t = 0.5 * (unitDirection.y + 1.0)
             return (1.0 - t) * Vector3.unit + t * Vector3(0.5, 0.7, 1.0)
@@ -173,6 +181,10 @@ extension RayTracerWorker {
             )
         else {
             return Vector3.zero
+        }
+
+        guard let scatteredRay = scatteredRay else {
+            return attenuation
         }
 
         return attenuation * rayTrace(

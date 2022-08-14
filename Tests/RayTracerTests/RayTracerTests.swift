@@ -12,6 +12,11 @@ final class RayTracerTests: XCTestCase {
     }
 
     static func randomMaterial() -> Material {
+//        let e = Double.random(in: 0..<1.0)
+//        if e < 0.4 {
+//            return .diffuseLight(emitter: DiffuseLight(r: 4.0, g: 4.0, b: 4.0))
+//        }
+
         let r = Double.random(in: 0..<1.0)
 
         if r < 0.8 {
@@ -159,6 +164,44 @@ final class RayTracerTests: XCTestCase {
         return world
     }
 
+    func illuminatedPerlinSpheresWorld() -> (World, Camera) {
+        let world = World()
+
+        let baseTexture = NoiseTexture(r: 0.7, g: 0.7, b: 0.7, scale: 4.0)
+        let baseSphere = Sphere(
+            0.0, -1000.0, 0.0,
+            radius: 1000.0,
+            material: .lambertian(texture: baseTexture)
+        )
+
+        let topTexture = NoiseTexture(r: 0.8, g: 0.8, b: 0.8, scale: 8.0)
+        let topSphere = Sphere(
+            0.0, 2.0, 0.0,
+            radius: 2.0,
+            material: .lambertian(texture: topTexture)
+        )
+
+        let litRectangle = XYRectangle(
+            x0: -2.0, y0: 0.0,
+            x1: 2.0, y1: 4.0,
+            z: -4.0,
+            material: .diffuseLight(
+                emitter: DiffuseLight(r: 4.0, g: 4.0, b: 4.0)
+            )
+        )
+
+        world.addShapes(baseSphere, topSphere, litRectangle)
+
+        let camera = Camera(
+            lookFrom: (12.0, 1.5, 2.5),
+            lookAt: (0.0, 1.0, 0.0),
+            verticalFieldOfView: 45.0,
+            pixels: (800, 600)
+        )
+
+        return (world, camera)
+    }
+
     func imageTextureSphereWorld() -> World {
         let world = World()
 
@@ -184,16 +227,18 @@ final class RayTracerTests: XCTestCase {
     }
 
     func testRayTracer() {
-        let camera = Camera(
-            lookFrom: (9.0, 1.5, 2.5),
-            lookAt: (0.0, 1.0, 0.0),
-            verticalFieldOfView: 35.0,
-            pixels: (800, 600)
-        )
+//        let camera = Camera(
+//            lookFrom: (9.0, 1.5, 2.5),
+//            lookAt: (0.0, 1.0, 0.0),
+//            verticalFieldOfView: 35.0,
+//            pixels: (800, 600)
+//        )
 
-        //let world = RayTracerTests.randomSphereWorld(probability: 0.8)
+        //let world = RayTracerTests.randomSphereWorld(probability: 0.3)
         //let world = perlinSpheresWorld()
-        let world = imageTextureSphereWorld()
+        //let world = imageTextureSphereWorld()
+        let (world, camera) = illuminatedPerlinSpheresWorld()
+
         var configuration = TraceConfiguration()
         configuration.antialiasing = .off//.on(count: 20)
         configuration.maxScatters = 50
