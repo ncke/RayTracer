@@ -13,7 +13,6 @@ public enum Material {
     case lambertian(texture: Texture)
     case metal(albedo: Albedo, fuzziness: Double)
     case dielectric(refractiveIndex: RefractiveIndex)
-    case diffuseLight(emitter: Emitter)
 }
 
 // MARK: - Scattering
@@ -49,14 +48,6 @@ extension Material {
                 incomingRay: incomingRay,
                 intersection: intersection
             )
-
-        case .diffuseLight(let emitter):
-            return DiffuseEmitting.emit(
-                emitter: emitter,
-                incomingRay: incomingRay,
-                intersection: intersection
-            )
-
         }
     }
 

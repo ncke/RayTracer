@@ -164,10 +164,17 @@ extension RayTracerWorker {
             )
         else {
             return Vector3(0.0, 0.0, 0.0)
-            
+
             let unitDirection = ray.direction.normalised
             let t = 0.5 * (unitDirection.y + 1.0)
             return (1.0 - t) * Vector3.unit + t * Vector3(0.5, 0.7, 1.0)
+        }
+
+        if let emitter = intersection.shape.emitter as? Emitting {
+            let (u, v) = intersection.uvCoordinate
+            let emitted = emitter.color(u: u, v: v, position: intersection.hitPoint)
+
+            return emitted
         }
 
         guard scatterCount < configuration.maxScatters else {

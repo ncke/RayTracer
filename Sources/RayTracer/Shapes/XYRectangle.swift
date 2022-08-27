@@ -14,6 +14,7 @@ public struct XYRectangle: Shape {
     let yRange: ClosedRange<Double>
     let zRectangle: Double
     public let material: Material
+    public let emitter: Emitter?
 
     public init(
         x0: Double,
@@ -21,12 +22,14 @@ public struct XYRectangle: Shape {
         x1: Double,
         y1: Double,
         z: Double,
-        material: Material
+        material: Material,
+        emitter: Emitter? = nil
     ) {
         xRange = x0 ... x1
         yRange = y0 ... y1
         zRectangle = z
         self.material = material
+        self.emitter = emitter
     }
 
 }

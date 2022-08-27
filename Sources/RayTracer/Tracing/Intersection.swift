@@ -5,6 +5,14 @@
 
 import Foundation
 
+// MARK: - Intersectable
+
+protocol Intersectable {
+
+    func intersect(ray: Ray, tRange: Range<Double>) -> Intersection?
+
+}
+
 // MARK: - Intersection
 
 struct Intersection {

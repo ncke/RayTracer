@@ -13,10 +13,6 @@ public protocol Shape {
 
     var material: Material { get }
 
-}
-
-protocol Intersectable {
-
-    func intersect(ray: Ray, tRange: Range<Double>) -> Intersection?
+    var emitter: Emitter? { get }
 
 }

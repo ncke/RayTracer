@@ -174,23 +174,24 @@ final class RayTracerTests: XCTestCase {
             material: .lambertian(texture: baseTexture)
         )
 
-        let topTexture = NoiseTexture(r: 0.8, g: 0.8, b: 0.8, scale: 8.0)
-        let topSphere = Sphere(
+        let centralTexture = NoiseTexture(r: 0.8, g: 0.8, b: 0.8, scale: 8.0)
+        let centralSphere = Sphere(
             0.0, 2.0, 0.0,
             radius: 2.0,
-            material: .lambertian(texture: topTexture)
+            material: .lambertian(texture: centralTexture)
         )
 
         let litRectangle = XYRectangle(
-            x0: -2.0, y0: 0.0,
-            x1: 2.0, y1: 4.0,
-            z: -4.0,
-            material: .diffuseLight(
-                emitter: DiffuseLight(r: 4.0, g: 4.0, b: 4.0)
-            )
+            x0: 3.0, y0: 1.0,
+            x1: 5.0, y1: 3.0,
+            z: -2.0,
+            material: .lambertian(texture: ConstantTexture(uniform: 4.0)),
+            emitter: DiffuseLight(r: 4.0, g: 4.0, b: 4.0)
         )
 
-        world.addShapes(baseSphere, topSphere, litRectangle)
+        //let litSphere = Sphere(0.0, 7.0, 0.0, radius: 2.0, material: .lambertian(texture: ConstantTexture(uniform: 4.0)), emitter: DiffuseLight(r: 4.0, g: 4.0, b: 4.0))
+
+        world.addShapes(baseSphere, centralSphere, litRectangle/*, litSphere*/)
 
         let camera = Camera(
             lookFrom: (12.0, 1.5, 2.5),
@@ -240,7 +241,7 @@ final class RayTracerTests: XCTestCase {
         let (world, camera) = illuminatedPerlinSpheresWorld()
 
         var configuration = TraceConfiguration()
-        configuration.antialiasing = .off//.on(count: 20)
+        configuration.antialiasing = .on(count: 200)
         configuration.maxScatters = 50
         configuration.maxConcurrentPixels = 12
 

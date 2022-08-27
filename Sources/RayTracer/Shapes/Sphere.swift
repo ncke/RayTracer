@@ -11,23 +11,32 @@ public struct Sphere: Shape {
     let center: Vector3
     let radius: Double
     public let material: Material
+    public let emitter: Emitter?
 
     public init(
         _ x: Double,
         _ y: Double,
         _ z: Double,
         radius: Double,
-        material: Material
+        material: Material,
+        emitter: Emitter? = nil
     ) {
         self.center = Vector3(x, y, z)
         self.radius = radius
         self.material = material
+        self.emitter = emitter
     }
 
-    init(center: Vector3, radius: Double, material: Material) {
+    init(
+        center: Vector3,
+        radius: Double,
+        material: Material,
+        emitter: Emitter? = nil
+    ) {
         self.center = center
         self.radius = radius
         self.material = material
+        self.emitter = emitter
     }
 }
 

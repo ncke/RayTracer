@@ -15,7 +15,7 @@ struct LambertianScattering {
         texture: Texture,
         incomingRay: Ray,
         intersection: Intersection
-    ) -> (Vector3, Ray)? {
+    ) -> (Vector3, Ray) {
 
         let target = intersection.hitPoint
             + intersection.normal
