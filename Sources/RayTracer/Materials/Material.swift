@@ -13,6 +13,7 @@ public enum Material {
     case lambertian(texture: Texture)
     case metal(albedo: Albedo, fuzziness: Double)
     case dielectric(refractiveIndex: RefractiveIndex)
+    case nonscattering
 }
 
 // MARK: - Scattering
@@ -48,6 +49,9 @@ extension Material {
                 incomingRay: incomingRay,
                 intersection: intersection
             )
+
+        case .nonscattering:
+            return nil
         }
     }
 
