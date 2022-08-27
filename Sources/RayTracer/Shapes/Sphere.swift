@@ -10,6 +10,7 @@ import Foundation
 public struct Sphere: Shape {
     let center: Vector3
     let radius: Double
+    let flipNormal: Bool
     public let material: Material
     public let emitter: Emitter?
 
@@ -19,25 +20,16 @@ public struct Sphere: Shape {
         _ z: Double,
         radius: Double,
         material: Material,
-        emitter: Emitter? = nil
+        emitter: Emitter? = nil,
+        flipNormal: Bool = false
     ) {
         self.center = Vector3(x, y, z)
         self.radius = radius
         self.material = material
         self.emitter = emitter
+        self.flipNormal = flipNormal
     }
 
-    init(
-        center: Vector3,
-        radius: Double,
-        material: Material,
-        emitter: Emitter? = nil
-    ) {
-        self.center = center
-        self.radius = radius
-        self.material = material
-        self.emitter = emitter
-    }
 }
 
 // MARK: - Intersectable
@@ -71,6 +63,7 @@ extension Sphere: Intersectable {
                 hitPoint: hitPoint,
                 uvCoordinate: sphereUV(position: outwardNormal),
                 outwardNormal: outwardNormal,
+                flipNormal: flipNormal,
                 incidentRay: ray
             )
         }
@@ -86,6 +79,7 @@ extension Sphere: Intersectable {
                 hitPoint: hitPoint,
                 uvCoordinate: sphereUV(position: outwardNormal),
                 outwardNormal: outwardNormal,
+                flipNormal: flipNormal,
                 incidentRay: ray
             )
         }

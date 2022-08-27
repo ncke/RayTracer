@@ -9,6 +9,8 @@ import Foundation
 
 protocol Intersectable {
 
+    var flipNormal: Bool { get }
+
     func intersect(ray: Ray, tRange: Range<Double>) -> Intersection?
 
 }
@@ -32,6 +34,7 @@ extension Intersection {
         hitPoint: Vector3,
         uvCoordinate: (Double, Double),
         outwardNormal: Vector3,
+        flipNormal: Bool,
         incidentRay: Ray
     ) {
         self.shape = shape
@@ -40,6 +43,8 @@ extension Intersection {
         self.uvCoordinate = uvCoordinate
 
         isFrontFace = (incidentRay.direction ⋅ outwardNormal) < Double.zero
+
+
         normal = isFrontFace ? outwardNormal : -outwardNormal
     }
 

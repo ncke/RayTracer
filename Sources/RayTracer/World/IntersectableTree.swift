@@ -25,6 +25,8 @@ indirect enum IntersectableTree {
 
 extension IntersectableTree: Intersectable {
 
+    var flipNormal: Bool { false }
+
     func intersect(ray: Ray, tRange: Range<Double>) -> Intersection? {
         switch self {
 

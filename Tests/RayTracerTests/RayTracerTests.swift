@@ -227,6 +227,68 @@ final class RayTracerTests: XCTestCase {
         return world
     }
 
+    func cornellBoxWorld() -> (World, Camera) {
+        let redMaterial = Material.lambertian(
+            texture: ConstantTexture(r: 0.65, g: 0.05, b: 0.05)
+        )
+        let greenMaterial = Material.lambertian(
+            texture: ConstantTexture(r: 0.12, g: 0.45, b: 0.15)
+        )
+        let whiteMaterial = Material.lambertian(
+            texture: ConstantTexture(uniform: 0.73)
+        )
+        let lightEmitter = DiffuseLight(r: 15.0, g: 15.0, b: 15.0)
+
+        let greenWall = YZRectangle(
+            y0: 0.0, z0: 0.0, y1: 555.0, z1: 555.0,
+            x: 555.0,
+            material: greenMaterial
+        )
+        let redWall = YZRectangle(
+            y0: 0.0, z0: 0.0, y1: 555.0, z1: 555.0,
+            x: 0.0,
+            material: redMaterial
+        )
+        let floor = XZRectangle(
+            x0: 0.0, z0: 0.0, x1: 555.0, z1: 555.0,
+            y: 0.0,
+            material: whiteMaterial
+        )
+        let ceiling = XZRectangle(
+            x0: 0.0, z0: 0.0, x1: 555.0, z1: 555.0,
+            y: 555.0,
+            material: whiteMaterial
+        )
+        let back = XYRectangle(
+            x0: 0.0, y0: 0.0, x1: 555.0, y1: 555.0,
+            z: 555.0,
+            material: whiteMaterial
+        )
+        let light = XZRectangle(
+            x0: 113.0, z0: 127.0, x1: 443.0, z1: 432.0,
+            y: 554.0,
+            material: .nonscattering,
+            emitter: lightEmitter
+        )
+
+        let world = World()
+        world.addShapes(greenWall, redWall, floor, ceiling, back, light)
+
+        let box1 = Box(p0: (130.0, 0.0, 65.0), p1: (295.0, 165.0, 230.0), material: whiteMaterial)
+        let box2 = Box(p0: (265.0, 0.0, 295.0), p1: (430.0, 330.0, 460.0), material: whiteMaterial)
+
+        world.addShapes(box1, box2)
+
+        let camera = Camera(
+            lookFrom: (278.0, 278.0, -800.0),
+            lookAt: (278.0, 278.0, 0.0),
+            verticalFieldOfView: 40.0,
+            pixels: (600, 400)
+        )
+
+        return (world, camera)
+    }
+
     func testRayTracer() {
 //        let camera = Camera(
 //            lookFrom: (9.0, 1.5, 2.5),
@@ -238,10 +300,10 @@ final class RayTracerTests: XCTestCase {
         //let world = RayTracerTests.randomSphereWorld(probability: 0.3)
         //let world = perlinSpheresWorld()
         //let world = imageTextureSphereWorld()
-        let (world, camera) = illuminatedPerlinSpheresWorld()
+        let (world, camera) = cornellBoxWorld()
 
         var configuration = TraceConfiguration()
-        configuration.antialiasing = .on(count: 200)
+        configuration.antialiasing = .on(count: 20)
         configuration.maxScatters = 50
         configuration.maxConcurrentPixels = 12
 
