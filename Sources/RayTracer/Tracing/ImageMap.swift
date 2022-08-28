@@ -107,7 +107,7 @@ import AppKit
 
 extension ImageMap {
 
-    static func fromNSImage(_ image: NSImage) -> ImageMap? {
+    public static func fromNSImage(_ image: NSImage) -> ImageMap? {
         guard let data = image.tiffRepresentation else {
             return nil
         }

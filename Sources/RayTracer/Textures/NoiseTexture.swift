@@ -9,12 +9,12 @@ import Foundation
 
 // MARK: - Noise Texture
 
-class NoiseTexture: Texture {
+public class NoiseTexture: Texture {
 
     let textureColor: Vector3
     let scale: Double
 
-    init(r: Double, g: Double, b: Double, scale: Double) {
+    public init(r: Double, g: Double, b: Double, scale: Double) {
         self.textureColor = Vector3(r, g, b)
         self.scale = scale
     }

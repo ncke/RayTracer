@@ -13,8 +13,16 @@ public class World {
 
     var shapes: [Shape]
 
-    init() {
+    public init() {
         shapes = []
+    }
+
+    public init(shapes: [Shape]) {
+        self.shapes = shapes
+    }
+
+    public convenience init(_ shapes: Shape...) {
+        self.init(shapes: shapes)
     }
 
 }

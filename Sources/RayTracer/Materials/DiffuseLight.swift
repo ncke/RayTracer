@@ -9,11 +9,11 @@ import Foundation
 
 // MARK: - DiffuseLight
 
-class DiffuseLight: Emitter {
+public class DiffuseLight: Emitter {
 
     let emitColor: Vector3
 
-    init(r: Double, g: Double, b: Double) {
+    public init(r: Double, g: Double, b: Double) {
         emitColor = Vector3(r, g, b)
     }
 
