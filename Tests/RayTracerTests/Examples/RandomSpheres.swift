@@ -1,16 +1,16 @@
 //
-//  RandomSphereExample.swift
+//  RandomSpheres.swift
 //  
 //
 //  Created by Nick on 28/08/2022.
 //
 
 import Foundation
-@testable import RayTracer
+import RayTracer
 
-// MARK: - Random Sphere Example
+// MARK: - Random Spheres Example
 
-struct RandomSphereExample: Example {
+struct RandomSpheres: Example {
 
     static func world() -> World {
         let probability = 0.7
@@ -81,18 +81,27 @@ struct RandomSphereExample: Example {
 
     static func camera() -> Camera {
         Camera(
-            lookFrom: (9.0, 1.5, 2.5),
-            lookAt: (0.0, 1.0, 0.0),
-            verticalFieldOfView: 35.0,
+            lookFrom: (6.0, 0.8, 2.5),
+            lookAt: (1.0, 1.0, 0.0),
+            verticalFieldOfView: 50.0,
             pixels: (800, 600)
         )
+    }
+
+    static func configuration() -> TraceConfiguration {
+        var configuration = TraceConfiguration()
+        configuration.ambientLightColor = (0.5, 0.7, 1.0)
+        configuration.antialiasing = .on(count: 40)
+        configuration.maxScatters = 50
+
+        return configuration
     }
 
 }
 
 // MARK: - Random Material
 
-extension RandomSphereExample {
+extension RandomSpheres {
 
     static func randomMaterial() -> Material {
         let r = Double.random(in: 0..<1.0)

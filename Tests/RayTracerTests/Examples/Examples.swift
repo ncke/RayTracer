@@ -6,19 +6,52 @@
 //
 
 import Foundation
-@testable import RayTracer
+import RayTracer
+
+// MARK: - Example Protocol
 
 protocol Example {
     static func world() -> World
     static func camera() -> Camera
+    static func configuration() -> TraceConfiguration
 }
 
-enum Examples {
-    case randomSphere
+// MARK: - Available Examples
 
-    var example: Example.Type {
+enum Examples {
+    case cornellBox
+    case earth
+    case glassBall
+    case litPerlin
+    case perlinSphere
+    case randomSpheres
+}
+
+// MARK: - Properties
+
+extension Examples {
+
+    func world() -> World {
+        example.world()
+    }
+
+    func camera() -> Camera {
+        example.camera()
+    }
+
+    func configuration() -> TraceConfiguration {
+        example.configuration()
+    }
+
+    private var example: Example.Type {
         switch self {
-        case.randomSphere: return RandomSphereExample.self
+        case .cornellBox: return CornellBox.self
+        case .earth: return Earth.self
+        case .glassBall: return GlassBall.self
+        case .litPerlin: return LitPerlin.self
+        case .perlinSphere: return PerlinSphere.self
+        case .randomSpheres: return RandomSpheres.self
         }
     }
+    
 }
