@@ -163,11 +163,13 @@ extension RayTracerWorker {
                 depthRange: configuration.depthRange
             )
         else {
-            return Vector3(0.0, 0.0, 0.0)
+            if let ambientColor = configuration.ambientLightVector {
+                let unitDirection = ray.direction.normalised
+                let t = 0.5 * (unitDirection.y + 1.0)
+                return (1.0 - t) * Vector3.unit + t * ambientColor
+            }
 
-            let unitDirection = ray.direction.normalised
-            let t = 0.5 * (unitDirection.y + 1.0)
-            return (1.0 - t) * Vector3.unit + t * Vector3(0.5, 0.7, 1.0)
+            return Vector3(0.0, 0.0, 0.0)
         }
 
         if let emitter = intersection.shape.emitter as? Emitting {
