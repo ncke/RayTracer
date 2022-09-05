@@ -44,7 +44,6 @@ extension Intersection {
 
         isFrontFace = (incidentRay.direction ⋅ outwardNormal) < Double.zero
 
-
         normal = isFrontFace ? outwardNormal : -outwardNormal
     }
 

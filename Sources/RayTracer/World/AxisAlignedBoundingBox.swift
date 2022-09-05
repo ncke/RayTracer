@@ -24,7 +24,7 @@ class AxisAlignedBoundingBox {
 
 extension AxisAlignedBoundingBox {
 
-    func hit(ray: Ray, depthRange: Range<Double>) -> Bool {
+    func intersection(ray: Ray, depthRange: Range<Double>) -> Bool {
         var tMin = depthRange.lowerBound
         var tMax = depthRange.upperBound
 
@@ -101,6 +101,13 @@ extension AxisAlignedBoundingBox {
         )
 
         return AxisAlignedBoundingBox(sml, big)
+    }
+
+    static func augmentedBox(
+        _ boxable0: BoundingBoxable,
+        _ boxable1: BoundingBoxable
+    ) -> AxisAlignedBoundingBox {
+        surroundingBox(boxable0, boxable1)!
     }
 
 }

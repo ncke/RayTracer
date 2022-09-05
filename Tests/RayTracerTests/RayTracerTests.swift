@@ -4,7 +4,7 @@ import XCTest
 final class RayTracerTests: XCTestCase {
 
     func testRayTracer() {
-        let example = Examples.earth
+        let example = Examples.cornellBox
 
         let world = example.world()
         let camera = example.camera()
@@ -14,7 +14,7 @@ final class RayTracerTests: XCTestCase {
         let semaphore = DispatchSemaphore(value: 0)
         let startTime = Date()
 
-        let worker = RayTracer.trace(
+        _ = RayTracer.trace(
             camera: camera,
             world: world,
             configuration: configuration
@@ -27,8 +27,9 @@ final class RayTracerTests: XCTestCase {
         semaphore.wait()
 
         let stopTime = Date()
+        let elapsed = stopTime.timeIntervalSince(startTime)
 
-        print("⏱ time elapsed: ", stopTime.timeIntervalSince(startTime), " secs")
+        print("⏱ time elapsed: \(elapsed) secs")
 
         let docs = FileManager.default.urls(
             for: .documentDirectory,

@@ -55,7 +55,7 @@ extension IntersectableTree: Intersectable {
         left: IntersectableTree?,
         right: IntersectableTree?
     ) -> Intersection? {
-        guard box.hit(ray: ray, depthRange: tRange) else {
+        guard box.intersection(ray: ray, depthRange: tRange) else {
             return nil
         }
 
