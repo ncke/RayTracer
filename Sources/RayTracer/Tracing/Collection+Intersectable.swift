@@ -1,10 +1,3 @@
-//
-//  Collection+Intersectable.swift
-//  
-//
-//  Created by Nick on 27/08/2022.
-//
-
 import Foundation
 
 extension Collection where Element == Intersectable {

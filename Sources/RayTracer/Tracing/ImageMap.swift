@@ -1,10 +1,3 @@
-//
-//  ImageMap.swift
-//  
-//
-//  Created by Nick on 31/07/2022.
-//
-
 import Foundation
 
 // MARK: - Image Map
@@ -20,8 +13,7 @@ public class ImageMap {
         self.size = size
         self.pixels = [[RGBColor]](
             repeating: [RGBColor](repeating: RGBColor.black, count: size.0),
-            count: size.1
-        )
+            count: size.1)
     }
 
 }

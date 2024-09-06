@@ -1,10 +1,3 @@
-//
-//  MetallicScattering.swift
-//  
-//
-//  Created by Nick on 31/07/2022.
-//
-
 import Foundation
 
 // MARK: - Metallic Scattering
@@ -18,8 +11,7 @@ struct MetallicScattering {
         intersection: Intersection
     ) -> (Vector3, Ray)? {
         var reflected = incomingRay.direction.normalised.reflected(
-            normal: intersection.normal
-        )
+            normal: intersection.normal)
 
         if fuzziness > Double.zero {
             let peturb = Sphere.randomInteriorPoint(radius: Sphere.unitRadius)
@@ -28,8 +20,7 @@ struct MetallicScattering {
 
         let scattered = Ray(
             origin: intersection.hitPoint,
-            direction: reflected
-        )
+            direction: reflected)
 
         if scattered.direction ⋅ intersection.normal > Double.zero {
             let attenuation = albedo.vector

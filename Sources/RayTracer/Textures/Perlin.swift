@@ -1,10 +1,3 @@
-//
-//  Perlin.swift
-//  
-//
-//  Created by Nick on 05/08/2022.
-//
-
 import Foundation
 
 // MARK: - Perlin Noise
@@ -39,8 +32,7 @@ extension Perlin {
         let floors = Vector3(
             floor(position.x),
             floor(position.y),
-            floor(position.z)
-        )
+            floor(position.z))
 
         let offsets = position - floors
 

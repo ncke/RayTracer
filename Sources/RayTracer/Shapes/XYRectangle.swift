@@ -1,10 +1,3 @@
-//
-//  XYRectangle.swift
-//  
-//
-//  Created by Nick on 14/08/2022.
-//
-
 import Foundation
 
 // MARK: - XYRectangle
@@ -80,14 +73,12 @@ extension XYRectangle: BoundingBoxable {
         let a = Vector3(
             xBoxed.lowerBound,
             yBoxed.lowerBound,
-            zRectangle - ClosedRange.epsilon
-        )
+            zRectangle - ClosedRange.epsilon)
 
         let b = Vector3(
             xBoxed.upperBound,
             yBoxed.upperBound,
-            zRectangle + ClosedRange.epsilon
-        )
+            zRectangle + ClosedRange.epsilon)
 
         return AxisAlignedBoundingBox(a, b)
     }

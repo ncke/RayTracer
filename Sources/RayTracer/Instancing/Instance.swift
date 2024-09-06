@@ -1,10 +1,3 @@
-//
-//  Instance.swift
-//  
-//
-//  Created by Nick on 05/09/2022.
-//
-
 import Foundation
 
 // MARK: - Instance

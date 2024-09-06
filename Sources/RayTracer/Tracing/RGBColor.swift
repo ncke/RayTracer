@@ -1,8 +1,3 @@
-//
-//  RGBColor.swift
-//  Created by Nick on 22/04/2022.
-//
-
 import Foundation
 
 // MARK: - Color Vector

@@ -1,8 +1,3 @@
-//
-//  RayTracer.swift
-//  Created by Nick on 19/04/2022.
-//
-
 import Foundation
 
 // MARK: - Ray Tracer
@@ -24,8 +19,7 @@ public struct RayTracer {
             camera: camera,
             configuration: configuration,
             progressDelegate: progressDelegate,
-            completion: completion
-        )
+            completion: completion)
     }
 
 }

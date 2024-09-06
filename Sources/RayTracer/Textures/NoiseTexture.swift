@@ -1,10 +1,3 @@
-//
-//  NoiseTexture.swift
-//  
-//
-//  Created by Nick on 05/08/2022.
-//
-
 import Foundation
 
 // MARK: - Noise Texture

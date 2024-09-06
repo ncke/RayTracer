@@ -1,10 +1,3 @@
-//
-//  Scattering.swift
-//  
-//
-//  Created by Nick on 31/07/2022.
-//
-
 import Foundation
 
 // MARK: - Lambertian Scattering
@@ -23,8 +16,7 @@ struct LambertianScattering {
 
         let scattered = Ray(
             origin: intersection.hitPoint,
-            direction: target - intersection.hitPoint
-        )
+            direction: target - intersection.hitPoint)
 
         guard let textured = texture as? Textured else {
             fatalError()
@@ -34,8 +26,7 @@ struct LambertianScattering {
         let attenuation = textured.color(
             u: u,
             v: v,
-            position: intersection.hitPoint
-        )
+            position: intersection.hitPoint)
 
         return (attenuation, scattered)
     }

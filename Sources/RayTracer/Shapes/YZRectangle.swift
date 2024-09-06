@@ -1,10 +1,3 @@
-//
-//  YZRectangle.swift
-//  
-//
-//  Created by Nick on 27/08/2022.
-//
-
 import Foundation
 
 // MARK: - YZRectangle
@@ -63,8 +56,7 @@ extension YZRectangle: Intersectable {
             uvCoordinate: (u, v),
             outwardNormal: Vector3(1.0, 0.0, 0.0),
             flipNormal: flipNormal,
-            incidentRay: ray
-        )
+            incidentRay: ray)
     }
 
 }
@@ -80,14 +72,12 @@ extension YZRectangle: BoundingBoxable {
         let a = Vector3(
             xRectangle - ClosedRange.epsilon,
             yBoxed.lowerBound,
-            zBoxed.lowerBound
-        )
+            zBoxed.lowerBound)
 
         let b = Vector3(
             xRectangle + ClosedRange.epsilon,
             yBoxed.upperBound,
-            zBoxed.upperBound
-        )
+            zBoxed.upperBound)
 
         return AxisAlignedBoundingBox(a, b)
     }

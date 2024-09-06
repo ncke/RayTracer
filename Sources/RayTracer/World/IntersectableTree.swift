@@ -1,10 +1,3 @@
-//
-//  IntersectableTree.swift
-//  
-//
-//  Created by Nick on 02/08/2022.
-//
-
 import Foundation
 
 // MARK: - Intersectable Tree
@@ -16,8 +9,7 @@ indirect enum IntersectableTree {
     case box(
         box: AxisAlignedBoundingBox,
         left: IntersectableTree?,
-        right: IntersectableTree?
-    )
+        right: IntersectableTree?)
 
 }
 
@@ -36,15 +28,13 @@ extension IntersectableTree: Intersectable {
                 tRange: tRange,
                 box: box,
                 left: left,
-                right: right
-            )
+                right: right)
 
         case .primitive(let intersectable):
             return intersectPrimitive(
                 intersectable: intersectable,
                 ray: ray,
-                tRange: tRange
-            )
+                tRange: tRange)
         }
     }
 
@@ -111,8 +101,7 @@ extension IntersectableTree {
         guard
             let box = AxisAlignedBoundingBox.surroundingBox(
                 leftTree,
-                rightTree
-            )
+                rightTree)
         else {
             return nil
         }
@@ -120,8 +109,7 @@ extension IntersectableTree {
         return IntersectableTree.box(
             box: box,
             left: leftTree,
-            right: rightTree
-        )
+            right: rightTree)
     }
 
     private typealias

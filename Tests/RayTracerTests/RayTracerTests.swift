@@ -4,7 +4,7 @@ import XCTest
 final class RayTracerTests: XCTestCase {
 
     func testRayTracer() {
-        let example = Examples.cornellBox
+        let example = Examples.randomSpheres
 
         let world = example.world()
         let camera = example.camera()
@@ -33,15 +33,14 @@ final class RayTracerTests: XCTestCase {
 
         let docs = FileManager.default.urls(
             for: .documentDirectory,
-            in: .userDomainMask
-        )
+            in: .userDomainMask)
+
         let filename = docs[0].appendingPathComponent("image.ppm")
         
         try! image!.asP3String.write(
             to: filename,
             atomically: true,
-            encoding: .utf8
-        )
+            encoding: .utf8)
     }
 
     static var allTests = [

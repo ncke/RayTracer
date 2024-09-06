@@ -1,8 +1,3 @@
-//
-//  Ray.swift
-//  Created by Nick on 19/04/2022.
-//
-
 import Foundation
 
 // MARK: - Ray

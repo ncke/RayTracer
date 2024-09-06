@@ -1,10 +1,3 @@
-//
-//  AxisAlignedBoundingBox.swift
-//  
-//
-//  Created by Nick on 02/08/2022.
-//
-
 import Foundation
 
 // MARK: - Axis Aligned Bounding Box
@@ -91,14 +84,12 @@ extension AxisAlignedBoundingBox {
         let sml = Vector3(
             Swift.min(box0.min.x, box1.min.x),
             Swift.min(box0.min.y, box1.min.y),
-            Swift.min(box0.min.z, box1.min.z)
-        )
+            Swift.min(box0.min.z, box1.min.z))
 
         let big = Vector3(
             Swift.max(box0.max.x, box1.max.x),
             Swift.max(box0.max.y, box1.max.y),
-            Swift.max(box0.max.z, box1.max.z)
-        )
+            Swift.max(box0.max.z, box1.max.z))
 
         return AxisAlignedBoundingBox(sml, big)
     }

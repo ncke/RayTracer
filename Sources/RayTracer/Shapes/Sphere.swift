@@ -1,8 +1,3 @@
-//
-//  Sphere.swift
-//  Created by Nick on 19/04/2022.
-//
-
 import Foundation
 
 // MARK: - Sphere
@@ -64,8 +59,7 @@ extension Sphere: Intersectable {
                 uvCoordinate: sphereUV(position: outwardNormal),
                 outwardNormal: outwardNormal,
                 flipNormal: flipNormal,
-                incidentRay: ray
-            )
+                incidentRay: ray)
         }
 
         let t2 = (-bHalf + sqrtd) / a
@@ -80,8 +74,7 @@ extension Sphere: Intersectable {
                 uvCoordinate: sphereUV(position: outwardNormal),
                 outwardNormal: outwardNormal,
                 flipNormal: flipNormal,
-                incidentRay: ray
-            )
+                incidentRay: ray)
         }
 
         return nil
@@ -126,8 +119,7 @@ extension Sphere {
             let unitRandom = Vector3(
                 Double.random(in: 0.0..<1.0),
                 Double.random(in: 0.0..<1.0),
-                Double.random(in: 0.0..<1.0)
-            )
+                Double.random(in: 0.0..<1.0))
 
             let unitPoint = 2.0 * unitRandom - Vector3(1.0, 1.0, 1.0)
 

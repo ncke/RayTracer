@@ -1,10 +1,3 @@
-//
-//  Box.swift
-//  
-//
-//  Created by Nick on 27/08/2022.
-//
-
 import Foundation
 
 // MARK: - Box
@@ -66,14 +59,12 @@ private extension Box {
         let bottom = Vector3(
             min(v0.x, v1.x),
             min(v0.y, v1.y),
-            min(v0.z, v1.z)
-        )
+            min(v0.z, v1.z))
 
         let top = Vector3(
             max(v0.x, v1.x),
             max(v0.y, v1.y),
-            max(v0.z, v1.z)
-        )
+            max(v0.z, v1.z))
 
         return (bottom, top)
     }
@@ -93,43 +84,37 @@ private extension Box {
             x0: pMin.x, y0: pMin.y,
             x1: pMax.x, y1: pMax.y,
             z: pMax.z,
-            material: material
-        )
+            material: material)
 
         let side2 = XYRectangle(
             x0: pMin.x, y0: pMin.y,
             x1: pMax.x, y1: pMax.y,
             z: pMin.z,
-            material: material
-        )
+            material: material)
 
         let side3 = XZRectangle(
             x0: pMin.x, z0: pMin.z,
             x1: pMax.x, z1: pMax.z,
             y: pMax.y,
-            material: material
-        )
+            material: material)
 
         let side4 = XZRectangle(
             x0: pMin.x, z0: pMin.z,
             x1: pMax.x, z1: pMax.z,
             y: pMin.y,
-            material: material
-        )
+            material: material)
 
         let side5 = YZRectangle(
             y0: pMin.y, z0: pMin.z,
             y1: pMax.y, z1: pMax.z,
             x: pMax.x,
-            material: material
-        )
+            material: material)
 
         let side6 = YZRectangle(
             y0: pMin.y, z0: pMin.z,
             y1: pMax.y, z1: pMax.z,
             x: pMin.x,
-            material: material
-        )
+            material: material)
 
         return [ side1, side2, side3, side4, side5, side6 ]
     }

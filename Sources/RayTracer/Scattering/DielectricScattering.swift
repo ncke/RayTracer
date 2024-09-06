@@ -1,10 +1,3 @@
-//
-//  DielectricScattering.swift
-//  
-//
-//  Created by Nick on 31/07/2022.
-//
-
 import Foundation
 
 // MARK: - Dielectric Scattering
@@ -25,15 +18,13 @@ struct DielectricScattering {
 
         let refracted = incomingRay.direction.refracted(
             normal: intersection.normal,
-            refractiveIndex: index
-        )
+            refractiveIndex: index)
 
         let attenuation = DielectricScattering.unattenuated
 
         let scattered = Ray(
             origin: intersection.hitPoint,
-            direction: refracted
-        )
+            direction: refracted)
 
         return (attenuation, scattered)
     }

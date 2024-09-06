@@ -1,10 +1,3 @@
-//
-//  RayTracerWorker.swift
-//  
-//
-//  Created by Nick on 02/08/2022.
-//
-
 import Foundation
 
 // MARK: - Ray Tracer Progress Delegate
@@ -57,13 +50,11 @@ public class RayTracerWorker {
         traceQueue = DispatchQueue(
             label: "com.raytracer.trace-queue",
             qos: configuration.traceQoS,
-            attributes: .concurrent
-        )
+            attributes: .concurrent)
 
         writeQueue = DispatchQueue(
             label: "com.raytracer.write-queue",
-            qos: configuration.traceQoS
-        )
+            qos: configuration.traceQoS)
 
         pixels = imageArray.allPixels
 
@@ -97,15 +88,13 @@ extension RayTracerWorker {
                 for _ in 0..<self.configuration.effectiveAntialiasCount() {
                     let ray = self.camera.ray(
                         through: pixel,
-                        applyAntialias: self.configuration.antialiasing.isOn
-                    )
+                        applyAntialias: self.configuration.antialiasing.isOn)
 
                     let color = RayTracerWorker.rayTrace(
                         ray: ray,
                         tree: self.intersectableTree,
                         configuration: self.configuration,
-                        scatterCount: 0
-                    )
+                        scatterCount: 0)
 
                     colors.append(color)
                 }
@@ -133,8 +122,7 @@ extension RayTracerWorker {
                             self,
                             pixelsRemaining: pr,
                             pixelsTotal: pt,
-                            fractionCompleted: fraction
-                        )
+                            fractionCompleted: fraction)
                     }
 
                     self.commit()
@@ -160,8 +148,7 @@ extension RayTracerWorker {
             let intersection = World.nearestIntersection(
                 intersectableTree: tree,
                 ray: ray,
-                depthRange: configuration.depthRange
-            )
+                depthRange: configuration.depthRange)
         else {
             if let ambientColor = configuration.ambientLightVector {
                 let unitDirection = ray.direction.normalised
@@ -186,8 +173,7 @@ extension RayTracerWorker {
         guard
             let (attenuation, scatteredRay) = intersection.shape.material.scatter(
                 incomingRay: ray,
-                intersection: intersection
-            )
+                intersection: intersection)
         else {
             return Vector3.zero
         }
@@ -200,8 +186,7 @@ extension RayTracerWorker {
             ray: scatteredRay,
             tree: tree,
             configuration: configuration,
-            scatterCount: scatterCount + 1
-        )
+            scatterCount: scatterCount + 1)
     }
 
 }

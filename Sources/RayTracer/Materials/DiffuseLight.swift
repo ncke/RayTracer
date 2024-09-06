@@ -1,10 +1,3 @@
-//
-//  DiffuseLight.swift
-//  
-//
-//  Created by Nick on 10/08/2022.
-//
-
 import Foundation
 
 // MARK: - DiffuseLight

@@ -1,10 +1,3 @@
-//
-//  Material.swift
-//  
-//
-//  Created by Nick on 29/07/2022.
-//
-
 import Foundation
 
 // MARK: - Material
@@ -31,24 +24,21 @@ extension Material {
             return LambertianScattering.scatter(
                 texture: texture,
                 incomingRay: incomingRay,
-                intersection: intersection
-            )
+                intersection: intersection)
 
         case .metal(let albedo, let fuzziness):
             return MetallicScattering.scatter(
                 albedo: albedo,
                 fuzziness: fuzziness,
                 incomingRay: incomingRay,
-                intersection: intersection
-            )
+                intersection: intersection)
 
         case .dielectric(let refractiveIndex):
             return DielectricScattering.scatter(
                 refractiveIndex: refractiveIndex,
                 isFrontFace: intersection.isFrontFace,
                 incomingRay: incomingRay,
-                intersection: intersection
-            )
+                intersection: intersection)
 
         case .nonscattering:
             return nil

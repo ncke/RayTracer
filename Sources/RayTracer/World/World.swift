@@ -1,10 +1,3 @@
-//
-//  World.swift
-//  
-//
-//  Created by Nick on 31/07/2022.
-//
-
 import Foundation
 
 // MARK: - World

@@ -1,10 +1,3 @@
-//
-//  Antialiasing.swift
-//  
-//
-//  Created by Nick on 27/07/2022.
-//
-
 import Foundation
 
 // MARK: - Antialiasing

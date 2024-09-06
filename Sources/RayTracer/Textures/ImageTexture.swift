@@ -1,10 +1,3 @@
-//
-//  ImageTexture.swift
-//  
-//
-//  Created by Nick on 06/08/2022.
-//
-
 import Foundation
 
 // MARK: - Image Texture

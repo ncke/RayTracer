@@ -1,11 +1,6 @@
-//
-//  Earth.swift
-//  
-//
-//  Created by Nick on 28/08/2022.
-//
-
+#if canImport(AppKit)
 import AppKit
+#endif
 import Foundation
 import RayTracer
 
@@ -14,10 +9,13 @@ struct Earth: Example {
     static func world() -> World {
         let world = World()
 
+        #if canImport(AppKit)
         let url = Bundle.module.url(
             forResource: "Earth-2048x1024",
-            withExtension: "jpeg"
-        )!
+            withExtension: "jpeg")!
+        #else
+        fatalError("Requires AppKit")
+        #endif
 
         let data = try! Data(contentsOf: url)
         let nsImage = NSImage(data: data)!
@@ -27,8 +25,7 @@ struct Earth: Example {
         let earthSphere = Sphere(
             0.0, 0.0, 0.0,
             radius: 2.0,
-            material: .lambertian(texture: earthTexture)
-        )
+            material: .lambertian(texture: earthTexture))
 
         world.addShape(earthSphere)
 
@@ -40,8 +37,7 @@ struct Earth: Example {
             lookFrom: (6.0, 2.0, 3.0),
             lookAt: (0.0, 0.0, 0.0),
             verticalFieldOfView: 35.0,
-            pixels: (800, 600)
-        )
+            pixels: (800, 600))
     }
 
     static func configuration() -> TraceConfiguration {

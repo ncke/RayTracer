@@ -1,10 +1,3 @@
-//
-//  RandomSpheres.swift
-//  
-//
-//  Created by Nick on 28/08/2022.
-//
-
 import Foundation
 import RayTracer
 
@@ -20,14 +13,12 @@ struct RandomSpheres: Example {
         let checkerTexture = CheckerTexture(
             ConstantTexture(r: 0.2, g: 0.3, b: 0.1),
             ConstantTexture(uniform: 0.9),
-            scale: 10.0
-        )
+            scale: 10.0)
 
         let baseSphere = Sphere(
             0.0, -10000.0, 0.0,
             radius: 10000.0,
-            material: .lambertian(texture: checkerTexture)
-        )
+            material: .lambertian(texture: checkerTexture))
 
         world.addShape(baseSphere)
 
@@ -47,8 +38,7 @@ struct RandomSpheres: Example {
                     y,
                     z,
                     radius: 0.2,
-                    material: randomMaterial()
-                )
+                    material: randomMaterial())
 
                 world.addShape(sphere)
             }
@@ -57,16 +47,13 @@ struct RandomSpheres: Example {
         let bigSphere1 = Sphere(
             0.0, 1.0, 0.0,
             radius: 1.0,
-            material: .dielectric(refractiveIndex: RefractiveIndex.glass)
-        )
+            material: .dielectric(refractiveIndex: RefractiveIndex.glass))
 
         let bigSphere2 = Sphere(
             -3.0, 1.0, 0.0,
              radius: 1.0,
              material: .lambertian(
-                texture: ConstantTexture(r: 0.4, g: 0.2, b: 0.1)
-             )
-        )
+                texture: ConstantTexture(r: 0.4, g: 0.2, b: 0.1)))
 
         let bigSphere3 = Sphere(
             3.0, 1.0, 0.0,
@@ -84,15 +71,14 @@ struct RandomSpheres: Example {
             lookFrom: (6.0, 0.8, 2.5),
             lookAt: (1.0, 1.0, 0.0),
             verticalFieldOfView: 50.0,
-            pixels: (800, 600)
-        )
+            pixels: (800, 600))
     }
 
     static func configuration() -> TraceConfiguration {
         var configuration = TraceConfiguration()
         configuration.ambientLightColor = (0.5, 0.7, 1.0)
-        configuration.antialiasing = .on(count: 40)
-        configuration.maxScatters = 50
+        configuration.antialiasing = .on(count: 10) // 40
+        configuration.maxScatters = 10 // 50
 
         return configuration
     }
@@ -113,8 +99,8 @@ extension RandomSpheres {
             let albedo = Albedo(
                 0.5 * (1.0 + Double.random(in: 0..<1.0)),
                 0.5 * (1.0 + Double.random(in: 0..<1.0)),
-                0.5 * (1.0 + Double.random(in: 0..<1.0))
-            )
+                0.5 * (1.0 + Double.random(in: 0..<1.0)))
+
             return .metal(
                 albedo: albedo,
                 fuzziness: Double.random(in: 0..<0.5)
@@ -129,8 +115,7 @@ extension RandomSpheres {
         ConstantTexture(
             r: Double.random(in: 0..<1.0),
             g: Double.random(in: 0..<1.0),
-            b: Double.random(in: 0..<1.0)
-        )
+            b: Double.random(in: 0..<1.0))
     }
 
 }

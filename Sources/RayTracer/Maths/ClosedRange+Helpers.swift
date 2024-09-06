@@ -1,10 +1,3 @@
-//
-//  ClosedRange+Helpers.swift
-//  
-//
-//  Created by Nick on 27/08/2022.
-//
-
 import Foundation
 
 // MARK: - Closed Range Helpers
